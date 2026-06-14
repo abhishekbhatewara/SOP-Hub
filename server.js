@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const crypto = require('crypto');
 const db = require('./db');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
@@ -16,7 +17,31 @@ const model = genAI.getGenerativeModel({
   generationConfig: { responseMimeType: 'application/json' }
 });
 
-// ── GET accepted edits for a SOP (latest per field, applied as overrides) ──
+// ── Admin auth ────────────────────────────────────────────────────────────────
+function getAdminToken() {
+  const pwd = process.env.ADMIN_PASSWORD;
+  if (!pwd) return null;
+  return crypto.createHash('sha256').update(pwd + 'rbdpl-sop-hub').digest('hex');
+}
+
+function adminOnly(req, res, next) {
+  const token = req.headers['x-admin-token'];
+  const valid = getAdminToken();
+  if (!valid || token !== valid) return res.status(403).json({ error: 'Admin access required' });
+  next();
+}
+
+// ── POST admin login ──────────────────────────────────────────────────────────
+app.post('/api/admin/login', (req, res) => {
+  const { password } = req.body;
+  const valid = getAdminToken();
+  if (!valid) return res.status(500).json({ error: 'ADMIN_PASSWORD not configured' });
+  const input = crypto.createHash('sha256').update(password + 'rbdpl-sop-hub').digest('hex');
+  if (input !== valid) return res.status(401).json({ error: 'Invalid password' });
+  res.json({ token: valid });
+});
+
+// ── GET accepted edits for a SOP (applied as overrides on page load) ─────────
 app.get('/api/sops/:id/edits', (req, res) => {
   const rows = db.prepare(`
     SELECT field, new_value FROM sop_edits
@@ -28,17 +53,17 @@ app.get('/api/sops/:id/edits', (req, res) => {
   res.json(Object.values(byField));
 });
 
-// ── GET full edit history for a SOP ──
+// ── GET full edit history for a SOP ──────────────────────────────────────────
 app.get('/api/sops/:id/history', (req, res) => {
   const rows = db.prepare(`
-    SELECT id, field, suggestion, old_value, new_value, accepted, ts
+    SELECT id, field, suggestion, old_value, new_value, accepted, role, ts
     FROM sop_edits WHERE sop_id = ?
     ORDER BY id DESC
   `).all(req.params.id);
   res.json(rows);
 });
 
-// ── POST generate AI suggestion via Gemini 2.5 Flash ──
+// ── POST generate AI suggestion ───────────────────────────────────────────────
 app.post('/api/sops/:id/suggest', async (req, res) => {
   const { suggestion, sopData } = req.body;
   if (!suggestion || !sopData) return res.status(400).json({ error: 'Missing suggestion or sopData' });
@@ -66,15 +91,14 @@ Analyse the suggestion and return ONLY the fields that need to change. Use this 
     "objective": "updated string — include ONLY if the objective needs to change",
     "processDescription": ["full updated array — include ONLY if any step description changes"],
     "kpis": ["full updated array — include ONLY if KPIs change"],
-    "opportunities": [{"title": "...", "desc": "..."}] — include ONLY if opportunities change
+    "opportunities": [{"title": "...", "desc": "..."}]
   }
 }
 
 Rules:
-- Only include a field in "changes" if it actually needs updating based on the suggestion
-- If processDescription changes, return the FULL array (not just the changed steps)
-- Maintain the same professional, clear tone as the original
-- Keep the same level of specificity and detail
+- Only include a field in "changes" if it actually needs updating
+- If processDescription changes, return the FULL array
+- Maintain the same professional tone as the original
 - For opportunities, preserve the {title, desc} structure exactly
 - Do not invent changes not implied by the suggestion`;
 
@@ -88,34 +112,75 @@ Rules:
   }
 });
 
-// ── POST accept a specific field change ──
-app.post('/api/sops/:id/accept', (req, res) => {
+// ── POST user submits suggestion for admin review (no auth required) ──────────
+app.post('/api/sops/:id/submit', (req, res) => {
   const { field, oldValue, newValue, suggestion } = req.body;
   if (!field || newValue === undefined) return res.status(400).json({ error: 'Missing field or newValue' });
-
-  // Supersede any previous accepted edits for this field
-  db.prepare(`UPDATE sop_edits SET accepted = 2 WHERE sop_id = ? AND field = ? AND accepted = 1`)
-    .run(req.params.id, field);
-
   db.prepare(`
-    INSERT INTO sop_edits (sop_id, field, suggestion, old_value, new_value, accepted)
-    VALUES (?, ?, ?, ?, ?, 1)
+    INSERT INTO sop_edits (sop_id, field, suggestion, old_value, new_value, accepted, role)
+    VALUES (?, ?, ?, ?, ?, 0, 'user')
   `).run(req.params.id, field, suggestion || '', JSON.stringify(oldValue), JSON.stringify(newValue));
-
   res.json({ ok: true });
 });
 
-// ── POST revert a field to its original (base JS) value ──
-app.post('/api/sops/:id/revert', (req, res) => {
+// ── POST admin accepts a field change directly ────────────────────────────────
+app.post('/api/sops/:id/accept', adminOnly, (req, res) => {
+  const { field, oldValue, newValue, suggestion } = req.body;
+  if (!field || newValue === undefined) return res.status(400).json({ error: 'Missing field or newValue' });
+  db.prepare(`UPDATE sop_edits SET accepted = 2 WHERE sop_id = ? AND field = ? AND accepted = 1`)
+    .run(req.params.id, field);
+  db.prepare(`
+    INSERT INTO sop_edits (sop_id, field, suggestion, old_value, new_value, accepted, role)
+    VALUES (?, ?, ?, ?, ?, 1, 'admin')
+  `).run(req.params.id, field, suggestion || '', JSON.stringify(oldValue), JSON.stringify(newValue));
+  res.json({ ok: true });
+});
+
+// ── POST admin reverts a field to base data ───────────────────────────────────
+app.post('/api/sops/:id/revert', adminOnly, (req, res) => {
   const { field } = req.body;
   db.prepare(`UPDATE sop_edits SET accepted = 2 WHERE sop_id = ? AND field = ? AND accepted = 1`)
     .run(req.params.id, field);
   res.json({ ok: true });
 });
 
+// ── GET all pending user submissions (admin only) ─────────────────────────────
+app.get('/api/admin/pending', adminOnly, (req, res) => {
+  const rows = db.prepare(`
+    SELECT e.*, s.title as sop_title
+    FROM sop_edits e
+    WHERE e.accepted = 0 AND e.role = 'user'
+    ORDER BY e.id DESC
+  `).all();
+  res.json(rows);
+});
+
+// ── POST admin approves a pending submission ──────────────────────────────────
+app.post('/api/admin/approve/:editId', adminOnly, (req, res) => {
+  const edit = db.prepare(`SELECT * FROM sop_edits WHERE id = ?`).get(req.params.editId);
+  if (!edit) return res.status(404).json({ error: 'Not found' });
+  db.prepare(`UPDATE sop_edits SET accepted = 2 WHERE sop_id = ? AND field = ? AND accepted = 1`)
+    .run(edit.sop_id, edit.field);
+  db.prepare(`UPDATE sop_edits SET accepted = 1, role = 'admin' WHERE id = ?`).run(req.params.editId);
+  res.json({ ok: true });
+});
+
+// ── POST admin rejects a pending submission ───────────────────────────────────
+app.post('/api/admin/reject/:editId', adminOnly, (req, res) => {
+  db.prepare(`UPDATE sop_edits SET accepted = 3 WHERE id = ?`).run(req.params.editId);
+  res.json({ ok: true });
+});
+
+// ── GET pending count (admin only, for badge) ─────────────────────────────────
+app.get('/api/admin/pending-count', adminOnly, (req, res) => {
+  const row = db.prepare(`SELECT COUNT(*) as n FROM sop_edits WHERE accepted = 0 AND role = 'user'`).get();
+  res.json({ count: row.n });
+});
+
 app.listen(PORT, () => {
   console.log(`RBDPL SOP Hub → http://localhost:${PORT}`);
-  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key_here') {
-    console.warn('⚠  GEMINI_API_KEY not set in .env — AI suggestions will not work');
-  }
+  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key_here')
+    console.warn('⚠  GEMINI_API_KEY not set');
+  if (!process.env.ADMIN_PASSWORD)
+    console.warn('⚠  ADMIN_PASSWORD not set — admin features disabled');
 });

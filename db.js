@@ -16,4 +16,7 @@ db.exec(`
   )
 `);
 
+// Safe migration — add role column if it doesn't exist yet
+try { db.exec(`ALTER TABLE sop_edits ADD COLUMN role TEXT DEFAULT 'user'`); } catch(_) {}
+
 module.exports = db;
