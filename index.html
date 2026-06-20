@@ -116,6 +116,9 @@ tr:hover td{background:#fafbfc}
 .dept-Estimation{color:#65a30d;background:#f7fee7;border-color:#d9f99d}
 .dept-FM{color:#78716c;background:#fafaf9;border-color:#d6d3d1}
 .dept-Channel-Sales{color:#7c3aed;background:#f5f3ff;border-color:#ddd6fe}
+.dept-Accounts{color:#0891b2;background:#ecfeff;border-color:#a5f3fc}
+.dept-Marketing{color:#e11d48;background:#fff1f2;border-color:#fecdd3}
+.dept-Stores{color:#b45309;background:#fffbeb;border-color:#fde68a}
 
 /* SOP */
 .sop-card{background:#fff;border-radius:10px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.07);border:1px solid #e2e8f0;margin-bottom:16px}
@@ -260,16 +263,16 @@ tr:hover td{background:#fafbfc}
 <!-- DASHBOARD -->
 <div id="view-dashboard" class="view">
   <h2>AI Deployment Overview</h2>
-  <p class="subtitle">20 agents across 5 phases — deployment roadmap, phase planning, and infrastructure requirements</p>
+  <p class="subtitle">27 agents across 7 phases — deployment roadmap, phase planning, and infrastructure requirements</p>
   <div class="stat-grid">
-    <div class="stat-card"><div class="num">29</div><div class="lbl">SOPs Documented</div><div class="accent" style="color:#059669">14 departments · fully documented</div></div>
-    <div class="stat-card"><div class="num">14</div><div class="lbl">Departments Covered</div><div class="accent" style="color:#3b82f6">End-to-end project lifecycle</div></div>
-    <div class="stat-card"><div class="num">120</div><div class="lbl">Gaps Identified</div><div class="accent" style="color:#f59e0b">Process, control &amp; data gaps</div></div>
-    <div class="stat-card"><div class="num">20</div><div class="lbl">AI Agents Designed</div><div class="accent" style="color:#7c3aed">Across 5 implementation phases</div></div>
+    <div class="stat-card"><div class="num">38</div><div class="lbl">SOPs Documented</div><div class="accent" style="color:#059669">17 departments · fully documented</div></div>
+    <div class="stat-card"><div class="num">17</div><div class="lbl">Departments Covered</div><div class="accent" style="color:#3b82f6">End-to-end project lifecycle</div></div>
+    <div class="stat-card"><div class="num">154</div><div class="lbl">Gaps Identified</div><div class="accent" style="color:#f59e0b">Process, control &amp; data gaps</div></div>
+    <div class="stat-card"><div class="num">27</div><div class="lbl">AI Agents Designed</div><div class="accent" style="color:#7c3aed">Across 7 implementation phases</div></div>
   </div>
 
   <h3 style="margin-bottom:12px">Implementation Roadmap</h3>
-  <p style="font-size:13px;color:#64748b;margin-bottom:16px;margin-top:-8px">20 agents across 5 phases over 6 months — click any agent to view full details</p>
+  <p style="font-size:13px;color:#64748b;margin-bottom:16px;margin-top:-8px">27 agents across 7 phases over 8 months — click any agent to view full details</p>
   <div id="roadmap-phases"></div>
 
   <div class="card" style="margin-top:8px;margin-bottom:24px">
@@ -295,13 +298,17 @@ tr:hover td{background:#fafbfc}
     <table>
       <thead><tr><th>System</th><th>Used By (# agents)</th><th>Priority</th></tr></thead>
       <tbody>
-        <tr><td><strong>WhatsApp Business API</strong></td><td>15 of 20 agents</td><td><span class="badge" style="background:#fef2f2;color:#dc2626">Critical — Enable First</span></td></tr>
-        <tr><td><strong>High-rise ERP API</strong></td><td>16 of 20 agents</td><td><span class="badge" style="background:#fef2f2;color:#dc2626">Critical — Enable First</span></td></tr>
-        <tr><td><strong>Zoho CRM API</strong></td><td>7 of 20 agents</td><td><span class="badge" style="background:#fffbeb;color:#d97706">High</span></td></tr>
-        <tr><td><strong>m-Cube / Ozonetel API</strong></td><td>2 of 20 agents</td><td><span class="badge" style="background:#f0f9ff;color:#0369a1">Medium</span></td></tr>
-        <tr><td><strong>Quality App API</strong></td><td>2 of 20 agents</td><td><span class="badge" style="background:#f0f9ff;color:#0369a1">Medium</span></td></tr>
-        <tr><td><strong>Unnati (CP App) API</strong></td><td>1 of 20 agents</td><td><span class="badge" style="background:#f0fdf4;color:#059669">Lower</span></td></tr>
-        <tr><td><strong>MRF Portal API</strong></td><td>1 of 20 agents</td><td><span class="badge" style="background:#f0fdf4;color:#059669">Lower</span></td></tr>
+        <tr><td><strong>WhatsApp Business API</strong></td><td>20 of 27 agents</td><td><span class="badge" style="background:#fef2f2;color:#dc2626">Critical — Enable First</span></td></tr>
+        <tr><td><strong>High-rise ERP API</strong></td><td>20 of 27 agents</td><td><span class="badge" style="background:#fef2f2;color:#dc2626">Critical — Enable First</span></td></tr>
+        <tr><td><strong>Zoho CRM API</strong></td><td>8 of 27 agents</td><td><span class="badge" style="background:#fffbeb;color:#d97706">High</span></td></tr>
+        <tr><td><strong>GST / Income-Tax / RERA / ROC Portals</strong></td><td>1 of 27 agents</td><td><span class="badge" style="background:#fffbeb;color:#d97706">High (Finance phase)</span></td></tr>
+        <tr><td><strong>Google &amp; Meta Ads API</strong></td><td>1 of 27 agents</td><td><span class="badge" style="background:#fffbeb;color:#d97706">High (Marketing phase)</span></td></tr>
+        <tr><td><strong>Banking / Treasury Portals</strong></td><td>1 of 27 agents</td><td><span class="badge" style="background:#f0f9ff;color:#0369a1">Medium</span></td></tr>
+        <tr><td><strong>Verloop (WhatsApp-bot) API</strong></td><td>1 of 27 agents</td><td><span class="badge" style="background:#f0f9ff;color:#0369a1">Medium</span></td></tr>
+        <tr><td><strong>m-Cube / Ozonetel API</strong></td><td>2 of 27 agents</td><td><span class="badge" style="background:#f0f9ff;color:#0369a1">Medium</span></td></tr>
+        <tr><td><strong>Quality App API</strong></td><td>3 of 27 agents</td><td><span class="badge" style="background:#f0f9ff;color:#0369a1">Medium</span></td></tr>
+        <tr><td><strong>Unnati (CP App) API</strong></td><td>1 of 27 agents</td><td><span class="badge" style="background:#f0fdf4;color:#059669">Lower</span></td></tr>
+        <tr><td><strong>MRF Portal API</strong></td><td>1 of 27 agents</td><td><span class="badge" style="background:#f0fdf4;color:#059669">Lower</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -310,7 +317,7 @@ tr:hover td{background:#fafbfc}
 <!-- SOP LIBRARY -->
 <div id="view-sops" class="view active">
   <h2>SOP Library</h2>
-  <p class="subtitle">29 Standard Operating Procedures across 14 departments — click any SOP to explore its full process, RACI matrix, and KPIs</p>
+  <p class="subtitle">38 Standard Operating Procedures across 17 departments — click any SOP to explore its full process, RACI matrix, and KPIs</p>
   <div class="search-bar"><span class="search-icon">🔍</span><input type="text" id="sop-search" placeholder="Search by SOP ID, title, owner, or objective..." oninput="sopSearch=this.value;buildSOPs()"></div>
   <div style="margin-bottom:16px">
     <div style="font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Department</div>
@@ -346,7 +353,7 @@ tr:hover td{background:#fafbfc}
 <!-- AGENT LIBRARY -->
 <div id="view-agents" class="view">
   <h2>Agent Library</h2>
-  <p class="subtitle">20 AI agent designs — click any agent to see full implementation detail</p>
+  <p class="subtitle">27 AI agent designs — click any agent to see full implementation detail</p>
   <div class="search-bar"><span class="search-icon">🔍</span><input type="text" placeholder="Search agents by name, department, or SOP..." oninput="filterAgents(this.value)"></div>
   <div class="filter-row" id="dept-filters"></div>
   <div id="agent-grid"></div>
@@ -1971,6 +1978,474 @@ const SOPS = [
       ]
     },
     opportunities:["Even though the organization senses that customer referrals (Anubandh leads) are critical, there are no specific sales incentives to ensure focus on these leads.","Revived leads offer a better chance of conversion, however, there are no specific sales incentives to bring focus on these leads.","Customer profiling (data gathering and analysis) needs to be enhanced as a set process.","Need to ensure that 100% customers provide feedback at the time of exit in the system."]
+  },
+  // ── ACCOUNTS ──
+  {
+    id:"AC-01",dept:"Accounts",title:"Manage Accounts Receivable",owner:"HOD-AC",driveId:"1gfXK-aG0C-SnKvYwr_NMbCoWLOBl-Eah",
+    objective:"To ensure timely receipts across the project and organization's lifecycle — tracing every incoming payment to the right customer or transaction, reconciling it, and confirming financial closure before key handover.",
+    sipoc:{supplier:"Sales Team, CRM Team, Stores Team, Top Management",input:"Cheque / online receipt entries, milestone payment information, bank statements, scrap sale details, land transaction tranches, inter-site transfer requests",process:"Trace receipt to customer → Reconcile against bank statement → Issue reconciliation & financial closure → Process stamp duty & refunds → Record land / scrap / inter-site receivables",output:"Reconciled receipts, financial-closure confirmation, refund cheques, scrap & transfer invoices",customer:"CRM Team, Sales Team, Customers, Top Management"},
+    rasi:[
+      {activity:"Trace customer from whom card / RTGS payment received at booking or milestone",R:"Accounts Team",A:"—",S:"Sales Team, CRM Team",I:"—"},
+      {activity:"Post / close transactions",R:"CRM Team",A:"—",S:"Accounts Team",I:"—"},
+      {activity:"Send final reconciliation to customer",R:"CRM Team",A:"Accounts Team",S:"—",I:"—"},
+      {activity:"Pay stamp duty on behalf of customer",R:"CRM Team",A:"—",S:"Accounts Team",I:"—"},
+      {activity:"Verify and process refund",R:"Accounts Team",A:"—",S:"CRM Team",I:"—"},
+      {activity:"Record payment received as per land transactions",R:"Accounts Team",A:"—",S:"—",I:"MGMT"},
+      {activity:"Issue invoice for scrap and track receivables",R:"Accounts Team",A:"HOD-Purchase",S:"Stores Team",I:"—"},
+      {activity:"Manage inter-site transfers for material and machinery",R:"Accounts Team",A:"GM-Accounts",S:"Stores Team",I:"MGMT"}
+    ],
+    kpis:["Customer approval at handover within 20 minutes","Zero cases of mismatch between marked and actual receipt"],
+    kpiTable:[
+      {indicator:"Efficiency",title:"TAT for customer approval during handover",target:"20",unit:"Mins",owner:"GM-Accounts",freq:"Each customer"},
+      {indicator:"Effectiveness",title:"Number of cases of mismatch between marked and actual receipt",target:"0",unit:"Nos.",owner:"GM-Accounts",freq:"Each quarter"}
+    ],
+    formats:[],
+    references:["Checklist of documents to be submitted to banks"],
+    processDescription:[
+      "At the time of booking, the Sales Team either provides a cheque with the customer's details or makes an entry in High-rise with a pass-through account via online transaction, which reflects in the Accounts Team's unapproved queue. The Accounts Team approves the receipt and passes a bank receipt entry once the amount is received in the pass-through (interim) account, identifies the customer, and marks the receipt on High-rise. For milestone payments the CRM Team shares similar payment information. Where payments arrive directly from a bank (customer loan), the customer is difficult to trace automatically — the CRM Team coordinates with the sender bank and customer, identifies the payer, and marks the entry in High-rise with the UTR / reference number so the Accounts Team can reconcile it.",
+      "The Accounts Team sends the bank account statement to the CRM Team twice every day so they always have the latest receipt information. The CRM Team reviews the latest receipts that customers have informed them of, matches each to the customer, and marks the transaction as closed / received on High-rise. This reconciliation has a cut-off of the 3rd of every month for transactions recorded in the previous month.",
+      "The Accounts Team sends a reconciliation statement showing the outstanding amount to the customer at least one month before the expected possession date, ensuring no minor amount is missed. The Accounts Team also issues confirmation to the CRM Team that the entire due amount has been received (financial closure), on the basis of which the CRM Team proceeds with key handover for the unit.",
+      "On a request from the CRM Team, the Accounts Team pays stamp duty on behalf of the customer once the customer has made payment for it.",
+      "At the time of cancellation, the CRM Team initiates a refund by sending the customer request, booking form, cancellation note, and refund voucher. The Accounts Team decides any deductions, verifies all past receipts, and processes the refund by releasing the cheque to the customer within the timeframe communicated in the agreement.",
+      "Top Management informs the Accounts Team of any land transaction made. Payments may happen across several tranches; the Accounts Team tracks incoming payments, matches them to the expected tranche, and marks the sale transaction closed once the entire amount is received.",
+      "The Stores Team shares details of scrap being sold (vendor, material, amount). Once approved by the Purchase Head, the Accounts Team prepares and issues the scrap invoice and tracks the incoming payment against expectation.",
+      "For inter-company transfer of material and machinery, the Accounts Team prepares sales invoices and marks the transactions for accounting traceability, triggered by Stores Team requests to move material / machinery between projects or locations. Approval is taken from GM-Accounts case-to-case, and transfer pricing uses the moving average value."
+    ],
+    raciMatrix:{
+      roles:[
+        {name:"Accounts Team",color:"#0891b2"},
+        {name:"CRM Team",color:"#8b5cf6"},
+        {name:"Sales / Stores",color:"#d97706"},
+        {name:"Mgmt / Purchase",color:"#7C3AED"}
+      ],
+      phases:[
+        {id:1,name:"Trace & Reconcile Receipts",color:"#0891b2",steps:[1,2]},
+        {id:2,name:"Closure, Stamp Duty & Refunds",color:"#8b5cf6",steps:[3,4,5]},
+        {id:3,name:"Land, Scrap & Inter-site Receivables",color:"#7C3AED",steps:[6,7,8]}
+      ],
+      steps:[
+        {id:1,title:"Trace customer for card / RTGS receipt",raci:["R","","C",""],desc:"Sales books a cheque or pass-through online entry that lands in the Accounts unapproved queue. Accounts approves the receipt and passes the bank entry when funds hit the interim account, identifies the customer, and marks the receipt on High-rise. For direct bank (loan) receipts, CRM traces the payer via the sender bank and records the UTR / reference so Accounts can reconcile.",tags:[{t:"Output: Receipt marked & identified on High-rise",c:"output"}]},
+        {id:2,title:"Reconcile receipts against twice-daily bank statement",raci:["C","R","",""],desc:"Accounts sends the bank statement to CRM twice daily. CRM matches each latest receipt to the customer and marks it closed / received on High-rise. Cut-off for previous-month transactions is the 3rd of each month.",tags:[{t:"🔸 Cut-off: 3rd of month for prior-month receipts",c:"gate"},{t:"Output: Receipts reconciled & closed",c:"output"}]},
+        {id:3,title:"Issue reconciliation & confirm financial closure",raci:["A","R","",""],desc:"Accounts sends a reconciliation statement of outstanding amount to the customer at least one month before possession, then confirms financial closure to CRM once the full due amount is received — enabling key handover.",tags:[{t:"🔸 Financial closure confirmed before key handover",c:"gate"},{t:"Output: Closure confirmation → CRM",c:"output"},{t:"Key milestone",c:"key"}]},
+        {id:4,title:"Pay stamp duty on behalf of customer",raci:["C","R","",""],desc:"On a CRM request, Accounts pays stamp duty on behalf of the customer once the customer has paid for it.",tags:[{t:"Output: Stamp duty paid",c:"output"}]},
+        {id:5,title:"Verify & process refund on cancellation",raci:["R","C","",""],desc:"CRM initiates the refund with booking form, cancellation note, and refund voucher. Accounts decides deductions, verifies all past receipts, and releases the refund cheque within the agreement timeframe.",tags:[{t:"Govt: Refund within agreement-committed timeframe",c:"govt"},{t:"Output: Refund cheque released",c:"output"}]},
+        {id:6,title:"Record receipts for land transactions",raci:["R","","","I"],desc:"Top Management informs Accounts of land transactions paid in tranches. Accounts tracks incoming payments, matches them to expected tranches, and closes the sale once fully received.",tags:[{t:"Output: Land receipt tranches tracked & closed",c:"output"}]},
+        {id:7,title:"Issue scrap invoice & track receivable",raci:["R","","C","A"],desc:"Stores shares scrap sale details. After the Purchase Head approves, Accounts prepares and issues the scrap invoice and tracks the incoming payment.",tags:[{t:"🔸 Purchase Head approval before invoicing",c:"gate"},{t:"Output: Scrap invoice issued & tracked",c:"output"}]},
+        {id:8,title:"Manage inter-site material / machinery transfers",raci:["R","","C","A"],desc:"For inter-company transfers, Accounts prepares sales invoices for accounting traceability on Stores requests. GM-Accounts approves case-to-case; transfer pricing uses moving average value.",tags:[{t:"🔸 GM-Accounts approval case-to-case",c:"gate"},{t:"Output: Transfer invoices booked",c:"output"}]}
+      ]
+    },
+    opportunities:["Virtual accounts have been implemented and can vastly improve traceability and reduce manual effort for Accounts, Sales and CRM — there is a need to incentivize their use.","Process for managing receipts from selling extra parking needs to be formulated.","There is no specific framework based on which invoicing / transaction is or is not recorded in case of material transfers."]
+  },
+  {
+    id:"AC-02",dept:"Accounts",title:"Manage Accounts Payable",owner:"HOD-AC",driveId:"18hCQ-iM7HtslTCren2K25fdlj8dlcxmW",
+    objective:"To ensure timely payments across the project and organization's lifecycle — verifying and booking invoices for material suppliers, contractors, employees, and service providers, and releasing payment as per priority and fund availability.",
+    sipoc:{supplier:"Stores Team, Purchase Team, Contractor Billing Team, HR Team, HODs, HOD-Liaisoning",input:"Invoices, PO, WO, GRN, Material Quality Report, Expense Vouchers, Payroll Statement",process:"Verify & book invoice → Approve invoice → Decide priority → Release payment / advance → Process payroll, F&F, reimbursements → Pay service providers & JV partners",output:"Booked invoices, released payments, salary disbursement, F&F settlements, reconciliations",customer:"Material suppliers, Contractors, Employees, Service providers, JV partners"},
+    rasi:[
+      {activity:"Verify and book invoice (material)",R:"Accounts Billing Team",A:"Accounts Approval Team",S:"Stores Team, Purchase Team",I:"—"},
+      {activity:"Release payment for material suppliers",R:"Accounts Approval Team",A:"MGMT",S:"Purchase Team",I:"HOD-Accounts"},
+      {activity:"Make advance payments to material suppliers",R:"Accounts Approval Team",A:"—",S:"Purchase Team",I:"HOD-Accounts"},
+      {activity:"Verify and book invoice of contractors",R:"Contractor Billing Team (HO)",A:"GM-Projects",S:"Contractor Billing Team (Projects)",I:"Accounts Approval Team"},
+      {activity:"Release payment for contractors",R:"Accounts Approval Team",A:"HOD-Accounts",S:"—",I:"Contractor Billing Team (HO)"},
+      {activity:"Confirm & release advance payment to contractors",R:"Accounts Approval Team",A:"HOD-Accounts / GM-Projects",S:"Project Manager",I:"Contractor Billing Team (HO)"},
+      {activity:"Release salary & process Full and Final Settlement",R:"Accounts Approval Team",A:"—",S:"HR Team",I:"—"},
+      {activity:"Process reimbursements & no-WO service payments",R:"Accounts Approval Team",A:"HODs",S:"All",I:"—"},
+      {activity:"Process payment for JV partners and land acquisition",R:"Accounts Approval Team",A:"—",S:"HOD-Liaisoning",I:"MGMT"}
+    ],
+    kpis:["Zero project delays caused by delayed payment","Salary released by 7th of each month"],
+    kpiTable:[
+      {indicator:"Efficiency",title:"Delay in projects due to delay in making payment",target:"0",unit:"Days",owner:"HOD-Accounts",freq:"Each month"}
+    ],
+    formats:["RBD-FOR-AC-01: Payroll Statement"],
+    references:[],
+    processDescription:[
+      "The Accounts Billing Team verifies material supplier invoices against documents from the Stores Team (Invoice, Delivery Challan, GRN, Weigh Slip, Quality Report, Debit Note) and the Purchase Team (PO). After checking quantity and rates, it books the invoice on High-rise. The Approvals Team re-verifies quantity, rate, calculations, taxation, compliance, documentation, and debit note, then approves the invoice for payment.",
+      "When the Purchase Team requests payment release, the Accounts Approval Team — in consultation with Top Management — decides which outstanding invoices to pay based on invoice received date, payment terms, and criticality of payment. Advance payments against material supplier requests are made one by one as per agreed payment terms.",
+      "Labour contractor invoices follow a fortnightly cycle (16th for the 1st–15th period, 1st for the 16th–30th). Contractor Billing Team (Projects) verifies the invoice against work completion marked in High-rise and sends it to Contractor Billing Team (HO), who books it on High-rise based on GM-Projects approval. Unapproved invoices are visible to the Accounts Approval Team.",
+      "The Accounts Approval Team verifies details (quantity, rate, calculations, taxation, compliance, documentation, debit note, quality hold, retention) and approves the contractor invoice for payment based on HOD-Accounts approval, releasing payment immediately unless there is a fund constraint communicated by HOD-Accounts. For works contracts, payment is released depending on fund availability and the work order's payment terms.",
+      "For contractor advances, the Project Manager seeks GM-Projects approval; once approved, Contractor Billing Team (HO) books the invoice in High-rise and informs the Accounts Approval Team, which obtains HOD-Accounts approval and communicates the payment date.",
+      "HR sends payroll details in format RBD-FOR-AC-01: Payroll Statement. The Accounts Approval Team verifies TDS per employee while HR calculates advances, PF, ESIC, PT, and insurance deductions; together they arrive at the final salary, which is released by the 7th of each month. For exiting employees, HR sends the Full and Final Settlement calculation (leave encashment, no-dues, advances / loans, tax adjustment); Accounts checks it, enters it in High-rise, and releases the amount within 45 days of the last working day.",
+      "The Accounts Team receives employee expense vouchers / bills approved by the department HOD and processes them for payment as received. For non-construction services without work orders, HOD-approved invoices are booked in High-rise and paid depending on fund availability and payment terms; for foreign vendor (consultant) remittances, the team prepares the detailed documentation required.",
+      "Payments to JV partners and land owners are handled directly by Top Management. Based on the contract agreement from HOD-Liaisoning, the Accounts Approval Team prepares and sends a reconciliation statement to the partner / owner (keeping Top Management in the loop) and awaits Top Management's guideline on any transactions."
+    ],
+    raciMatrix:{
+      roles:[
+        {name:"Accounts Approval Team",color:"#0891b2"},
+        {name:"Billing Team",color:"#0d9488"},
+        {name:"Purchase / Stores / HR",color:"#d97706"},
+        {name:"HOD-Accounts / Mgmt",color:"#7C3AED"}
+      ],
+      phases:[
+        {id:1,name:"Material Supplier Payments",color:"#0891b2",steps:[1,2,3]},
+        {id:2,name:"Contractor Payments",color:"#0d9488",steps:[4,5]},
+        {id:3,name:"Payroll, Reimbursements & JV Payments",color:"#7C3AED",steps:[6,7,8]}
+      ],
+      steps:[
+        {id:1,title:"Verify & book material supplier invoice",raci:["A","R","C",""],desc:"Billing Team verifies the invoice against Stores documents (GRN, challan, weigh slip, quality report, debit note) and the Purchase Team's PO, books it on High-rise; the Approval Team re-verifies and approves it for payment.",tags:[{t:"🔸 Approval Team re-verifies before payment",c:"gate"},{t:"Output: Invoice booked & approved",c:"output"}]},
+        {id:2,title:"Decide priority & release supplier payment",raci:["R","","C","A"],desc:"On a Purchase Team request, the Approval Team and Top Management decide which outstanding invoices to pay based on received date, payment terms, and criticality.",tags:[{t:"🔸 Top Management decides payment priority",c:"gate"},{t:"Output: Payment released",c:"output"}]},
+        {id:3,title:"Make supplier advance payments",raci:["R","","C","I"],desc:"The Approval Team recommends advances on Purchase Team requests per agreed terms, paying each recipient one by one, keeping HOD-Accounts informed.",tags:[{t:"Output: Advances released per terms",c:"output"}]},
+        {id:4,title:"Verify & book contractor invoice (fortnightly cycle)",raci:["I","R","C","A"],desc:"Contractor invoices follow a 16th / 1st fortnightly cycle. Billing (Projects) verifies against work completion in High-rise; Billing (HO) books it on GM-Projects approval. Unapproved invoices are visible to the Approval Team.",tags:[{t:"🔸 GM-Projects approval before booking",c:"gate"},{t:"Output: Contractor invoice booked",c:"output"}]},
+        {id:5,title:"Approve & release contractor payment / advance",raci:["R","","C","A"],desc:"The Approval Team verifies details (incl. quality hold, retention) and releases payment on HOD-Accounts approval, subject to fund availability and work-order terms. Advances are released after Project Manager → GM-Projects approval.",tags:[{t:"🔸 HOD-Accounts approval; release subject to funds",c:"gate"},{t:"Output: Contractor payment released",c:"output"}]},
+        {id:6,title:"Process payroll & Full and Final Settlement",raci:["R","","C",""],desc:"Accounts verifies TDS while HR computes PF/ESIC/PT/advances; salary is released by the 7th. For exits, the F&F amount is released within 45 days of the last working day.",tags:[{t:"🔸 Salary released by 7th; F&F within 45 days",c:"gate"},{t:"Output: Salary & F&F disbursed",c:"output"}]},
+        {id:7,title:"Process reimbursements & no-WO service payments",raci:["R","","C","A"],desc:"HOD-approved employee expense vouchers and non-construction service invoices (no work order) are booked in High-rise and paid per fund availability; foreign remittances get detailed documentation.",tags:[{t:"Output: Reimbursements & ad-hoc service payments released",c:"output"}]},
+        {id:8,title:"Reconcile & pay JV partners / land owners",raci:["R","","C","I"],desc:"Based on the HOD-Liaisoning contract, Accounts prepares and sends a reconciliation statement to the JV partner / land owner and awaits Top Management's guideline before transacting.",tags:[{t:"🔸 Top Management guideline before transacting",c:"gate"},{t:"Output: Reconciliation statement to partner",c:"output"}]}
+      ]
+    },
+    opportunities:["Payment decisions are based on priority and made manually by senior stakeholders — automated rules (by payment value, vendor type, ageing) could reduce manual intervention to exceptions only.","Although a fortnightly invoicing cycle exists for contractors, invoices arrive daily with demands for priority payment, straining the process — this needs streamlining with the projects team (planning, billing, quality).","The company makes ad-hoc decisions on when to pay instead of a fixed weekly / fortnightly payment run.","To release salary by the 7th, HR should send the payroll statement by the 4th.","To ensure TDS payment and full compliance by the 7th, bill booking should close by the 4th of the month."]
+  },
+  {
+    id:"AC-03",dept:"Accounts",title:"Manage Financial & Taxation Compliance",owner:"HOD-AC",driveId:"1KiOKEkBk8I8mAqRSWc-fIvQAdHf_QduR",
+    objective:"To maintain 100% compliance across the project and organization's lifecycle — filing GST, TDS/TCS, RERA, ROC, and income-tax returns on time and responding to audits and assessment notices.",
+    sipoc:{supplier:"Internal teams (HR, Legal, HODs), External tax & RERA consultants, Company Secretary",input:"High-rise reports (GSTR1, GSTR2B, TDS, TCS), payroll data, RERA documentation, audit requests, assessment notices",process:"File GST returns → Pay & file TDS/TCS → Register & maintain RERA → ROC compliance → Annual financials & tax audits → Respond to assessments",output:"Filed returns, RERA compliance uploads, annual financial reports, audit responses",customer:"Tax authorities, RERA authority, ROC, Auditors, Top Management"},
+    rasi:[
+      {activity:"Pay GST and file returns",R:"Accounts Team",A:"—",S:"—",I:"HOD-Accounts"},
+      {activity:"Pay TDS and file returns",R:"Accounts Team",A:"—",S:"HR Team",I:"HOD-Accounts"},
+      {activity:"Submit RERA registration for new project",R:"Accounts Team",A:"—",S:"HODs",I:"MGMT"},
+      {activity:"Resubmit RERA for change or extension of time",R:"Accounts Team",A:"MGMT",S:"HODs",I:"—"},
+      {activity:"Submit quarterly and annual RERA compliance",R:"Accounts Team",A:"—",S:"HODs",I:"MGMT"},
+      {activity:"Submit ROC compliance",R:"CS",A:"—",S:"Accounts Team",I:"MGMT"},
+      {activity:"Respond to auditor's documentation request",R:"Accounts Team",A:"—",S:"—",I:"HOD-Accounts"},
+      {activity:"Compile & present annual financial reports",R:"HOD-Accounts",A:"—",S:"Accounts Team",I:"MGMT"},
+      {activity:"File annual Income Tax & GST returns / audits",R:"Accounts Team",A:"—",S:"—",I:"HOD-Accounts"},
+      {activity:"Respond to direct / indirect tax assessment notices",R:"HOD-Accounts",A:"—",S:"Accounts Team",I:"—"},
+      {activity:"Respond to PF / PT / ESIC assessment notices",R:"HOD-HR",A:"HOD-Accounts",S:"HR Team, Accounts Team",I:"—"}
+    ],
+    kpis:["Zero days delay in submission of compliances"],
+    kpiTable:[
+      {indicator:"Efficiency",title:"Delay in submission of compliances",target:"0",unit:"Days",owner:"HOD-Accounts",freq:"Each month"}
+    ],
+    formats:["RBD-FOR-AC-01: Payroll Statement"],
+    references:["Annual Financial Reports (past year's sample)","Example of assessment notice and company's response from a past case"],
+    processDescription:[
+      "The Accounts Team files multiple GST returns. GSTR1 is generated from High-rise, reviewed by the external tax consultant, and filed by the 11th (monthly) or 13th (IFF) — covering GST on income (flats, steel, RMC), with e-invoices mandatory for all B2B supplies. GSTR2B is generated on the 14th to reconcile purchases up to the 17th. After reconciling the GSTR2B against company purchases, GSTR3B is filed on the 20th (monthly) or 22nd after quarter-end (quarterly). Annual returns are filed by 31 December after consultant approval.",
+      "TDS and TCS are managed monthly. For other-than-salary TDS, the team generates the monthly report, performs rate / section / configuration checks, pays by the 7th, and files the return by the last day of the month after quarter-end. For salary TDS, HR sends payroll with TDS calculations which Accounts verifies and approves before paying by the 7th and filing similarly. TCS is generated from High-rise, paid, and filed by the 15th of the month after quarter-end.",
+      "RERA compliance is managed per project, starting with registration. The Accounts Team compiles documentation per the external RERA consultant's list (Architect's, CA's, Engineer's Certificates, etc.), makes the necessary payment, and submits for registration, keeping Top Management informed. The Single Point of Contact for RERA submission is the designated Top Management representative.",
+      "When sanction plans change or an extension of time is needed, RERA registration is modified and resubmitted. For changes, the team uploads new sanctioned plans, unit details, and revised cost estimates and responds to RERA queries. For extension of time, Management intimates the team, which submits the revised completion date, reason for delay, and Top Management sign-off.",
+      "RERA compliance is maintained quarterly (Architect's, CA's, Engineer's Certificates) and annually (Form 2A Quality Certificate from an external consultant, Form 5 Annual Audit Report), with Top Management kept informed of uploads. On receipt of the Occupancy Certificate from the Legal Team, the team uploads it to the RERA portal; once reviewed by the RERA authority, the project is marked completed.",
+      "The Company Secretary requests specific information which the Accounts Team supplies to enable periodic ROC compliance. The Accounts Team also responds to auditor requests for supporting documentation / backup evidence, keeping HOD-Accounts informed.",
+      "At year-end, the Accounts Team shares information in requisite formats with the consultant and supports preparation of the annual financial reports of the various companies. HOD-Accounts, with the consultant, presents these to Top Management for board-level decision-making. The team coordinates with the tax consultant to complete cost, statutory, and tax audits and file Income Tax returns before the due date, and files GST annual returns and prepares the audit report, keeping HOD-Accounts informed.",
+      "For direct / indirect tax assessment notices, HOD-Accounts responds with data prepared by the Accounts Team in consultation with the tax consultant on the response format. For statutory compliance notices (PF, PT, ESIC), HOD-HR issues the response after HOD-Accounts confirmation, based on information compiled by the HR and Accounts Teams."
+    ],
+    raciMatrix:{
+      roles:[
+        {name:"Accounts Team",color:"#0891b2"},
+        {name:"HOD-Accounts",color:"#0d9488"},
+        {name:"HR / CS / HODs",color:"#d97706"},
+        {name:"Consultant / Mgmt",color:"#7C3AED"}
+      ],
+      phases:[
+        {id:1,name:"GST, TDS & TCS Filing",color:"#0891b2",steps:[1,2]},
+        {id:2,name:"RERA & ROC Compliance",color:"#0d9488",steps:[3,4,5]},
+        {id:3,name:"Annual Audits & Assessments",color:"#7C3AED",steps:[6,7]}
+      ],
+      steps:[
+        {id:1,title:"File GST returns (GSTR1 / 2B / 3B / annual)",raci:["R","I","","C"],desc:"GSTR1 filed by 11th (13th IFF) with mandatory B2B e-invoices; GSTR2B generated on the 14th; GSTR3B filed by the 20th (22nd quarterly); annual return by 31 December after consultant approval.",tags:[{t:"Govt: GST monthly / quarterly / annual deadlines",c:"govt"},{t:"🔸 Consultant review before filing",c:"gate"},{t:"Output: GST returns filed",c:"output"}]},
+        {id:2,title:"Pay & file TDS / TCS",raci:["R","I","C",""],desc:"Other-than-salary and salary TDS paid by the 7th and filed by month-end after quarter; TCS paid and filed by the 15th after quarter. HR supplies salary TDS calculations for verification.",tags:[{t:"Govt: TDS/TCS payment by 7th / 15th",c:"govt"},{t:"Output: TDS/TCS paid & returns filed",c:"output"}]},
+        {id:3,title:"Register project on RERA",raci:["R","","C","I"],desc:"Accounts compiles consultant-listed documents (Architect's, CA's, Engineer's Certificates), pays fees, and submits for RERA registration via the Top Management SPOC, keeping Management informed.",tags:[{t:"Govt: RERA project registration",c:"govt"},{t:"Output: Project registered on RERA",c:"output"},{t:"Key milestone",c:"key"}]},
+        {id:4,title:"Resubmit RERA for changes / extension of time",raci:["R","","C","A"],desc:"For plan changes, upload revised plans, units, and cost estimates and answer queries. For extension of time, submit the revised completion date and reason with Top Management sign-off.",tags:[{t:"Govt: RERA modification / time extension",c:"govt"},{t:"🔸 Management approval for extension",c:"gate"},{t:"Output: RERA resubmission",c:"output"}]},
+        {id:5,title:"Submit quarterly / annual RERA compliance & closure",raci:["R","","C","I"],desc:"Quarterly certificates and annual Form 2A / Form 5 are uploaded with Management informed. On Occupancy Certificate from Legal, the project is uploaded and marked completed by RERA.",tags:[{t:"Govt: Quarterly & annual RERA compliance",c:"govt"},{t:"Output: RERA compliance maintained → project closure",c:"output"}]},
+        {id:6,title:"Compile annual financials & complete tax audits",raci:["C","R","","A"],desc:"Year-end information is shared with the consultant; HOD-Accounts presents annual financial reports to Top Management. Cost, statutory, and tax audits are completed and Income Tax / GST annual returns filed before due dates.",tags:[{t:"Govt: Statutory, cost & tax audits",c:"govt"},{t:"Output: Annual financials presented; returns filed",c:"output"},{t:"Key milestone",c:"key"}]},
+        {id:7,title:"Respond to ROC, audit & assessment notices",raci:["R","A","C","C"],desc:"Accounts supplies the CS for ROC compliance and responds to auditor requests. HOD-Accounts answers direct / indirect tax assessments with consultant input; HOD-HR answers PF/PT/ESIC notices after HOD-Accounts confirmation.",tags:[{t:"Govt: ROC & tax assessment responses",c:"govt"},{t:"Output: Notices & audit requests answered",c:"output"}]}
+      ]
+    },
+    opportunities:["Salary details are received from the HR Team at the last minute — this needs to be reviewed and advanced if possible to protect the 7th-of-month TDS deadline."]
+  },
+  {
+    id:"AC-04",dept:"Accounts",title:"Manage Treasury & Project Finance",owner:"HOD-AC",driveId:"1D4VLSUiyUo8H95M--ji0GDn2YVSsnesk",
+    objective:"To manage funds for operations and new business across the project and organization's lifecycle — projecting cash flow, mitigating deficits, and arranging project and asset financing.",
+    sipoc:{supplier:"All departments (Procurement, Liaisoning, Operations, Sales, Collections), Top Management, Bankers, P&M Team",input:"Departmental expense projections, business plan for land acquisition, term sheets, P&M financing needs",process:"Prepare cash-flow projection → Mitigate cash deficit → Decide funding source for new project → Loan documentation & compliance → Asset financing for P&M",output:"Company Cashflow Statement, inter-company transfers, short / long-term loans, project & asset finance",customer:"Top Management, HOD-Accounts, Project teams"},
+    rasi:[
+      {activity:"Prepare cash flow projections",R:"Accounts Team",A:"—",S:"—",I:"HOD-Accounts, MGMT"},
+      {activity:"Mitigate cash deficit",R:"MGMT",A:"—",S:"Accounts Team",I:"HOD-Accounts"},
+      {activity:"Decide source of funds for new project",R:"MGMT",A:"—",S:"Accounts Team, Liaisoning Team",I:"HOD-Accounts"},
+      {activity:"Submit documentation from loan application to repayment",R:"Accounts Team",A:"—",S:"—",I:"HOD-Accounts"},
+      {activity:"Trigger asset financing for Plant & Machinery",R:"Accounts Team",A:"—",S:"P&M Team",I:"HOD-Accounts"}
+    ],
+    kpis:["Zero days delay in payment of salary, partners and vendors"],
+    kpiTable:[
+      {indicator:"Effectiveness",title:"Delay in payment of salary, partners and vendors",target:"0",unit:"Days",owner:"HOD-Accounts",freq:"Each month"}
+    ],
+    formats:["RBD-FOR-AC-02: Company Cashflow Statement"],
+    references:[],
+    processDescription:[
+      "The Accounts Team prepares the Company Cashflow Statement (RBD-FOR-AC-02) at the end of each month based on expected expenses consolidated from departments, and shares it with HOD-Accounts and Top Management. The statement incorporates a 3-month look-ahead to flag whether short-term or long-term loans may be required to cover any cash deficit.",
+      "In case of a cash deficit there are two mitigation routes: (a) Top Management decides on inter-company transfers and the Accounts Team executes them, keeping HOD-Accounts informed; or (b) Top Management may suggest short-term loans, OD, or CC and the entity to source it from, with the Accounts Team completing the documentation for approval and disbursement.",
+      "The Accounts Team provides financial inputs to the business plan initiated by the Liaisoning Team for a land parcel to be acquired and shares it with Top Management and HOD-Accounts. Based on the business plan, Top Management decides the banker to fund the project.",
+      "The Accounts Team prepares the detailed documentation required by bankers for loan approval and disbursement — including milestones for tranche release, the repayment model over the loan tenure, and other terms — and prepares / submits compliance documentation (certified by CA and Top Management) as required per the term sheet.",
+      "The Accounts Team receives inputs from the P&M Team on Plant and Machinery requirements and processes the loans from the vendor to fulfil the need, keeping HOD-Accounts informed."
+    ],
+    raciMatrix:{
+      roles:[
+        {name:"Accounts Team",color:"#0891b2"},
+        {name:"HOD-Accounts",color:"#0d9488"},
+        {name:"Top Management",color:"#7C3AED"},
+        {name:"Liaisoning / P&M",color:"#d97706"}
+      ],
+      phases:[
+        {id:1,name:"Cash Flow & Deficit Management",color:"#0891b2",steps:[1,2]},
+        {id:2,name:"Project Funding",color:"#0d9488",steps:[3,4]},
+        {id:3,name:"Asset Financing",color:"#7C3AED",steps:[5]}
+      ],
+      steps:[
+        {id:1,title:"Prepare monthly Company Cashflow Statement",raci:["R","I","I",""],desc:"Accounts prepares the cashflow statement with a 3-month look-ahead from consolidated departmental expenses and shares it with HOD-Accounts and Top Management to flag potential deficits.",tags:[{t:"Output: Company Cashflow Statement (3-month look-ahead)",c:"output"}]},
+        {id:2,title:"Mitigate cash deficit",raci:["C","I","R",""],desc:"Top Management decides between inter-company transfers (executed by Accounts) or short-term loans / OD / CC, specifying the source entity; Accounts completes documentation for approval and disbursement.",tags:[{t:"🔸 Top Management decides deficit mitigation route",c:"gate"},{t:"Output: Funds arranged",c:"output"}]},
+        {id:3,title:"Decide funding source for new project",raci:["C","I","R","C"],desc:"Accounts provides financial inputs to the Liaisoning land-acquisition business plan; based on it, Top Management decides the banker to fund the project.",tags:[{t:"🔸 Top Management selects project banker",c:"gate"},{t:"Output: Funding source decided",c:"output"},{t:"Key milestone",c:"key"}]},
+        {id:4,title:"Prepare loan documentation & compliance",raci:["R","I","","",],desc:"Accounts prepares banker documentation (tranche-release milestones, repayment model, terms) from application through repayment and submits CA / Top-Management-certified compliance documentation per the term sheet.",tags:[{t:"Output: Loan documentation & compliance submitted",c:"output"}]},
+        {id:5,title:"Trigger asset financing for Plant & Machinery",raci:["R","I","","C"],desc:"On P&M Team inputs about machinery requirements, Accounts processes the loans from the vendor, keeping HOD-Accounts informed.",tags:[{t:"Output: P&M asset financing processed",c:"output"}]}
+      ]
+    },
+    opportunities:["The treasury function should split into two legs — current business operations and growth capital (new land acquisitions) — with distinct flows.","No defined cadence for monitoring cash flow daily / weekly / monthly, nor a policy for handling surplus cash across projects.","No agreed matrix capping debt (e.g. debt-to-net-worth or debt-equity range), and no defined medium for sharing current debt positioning with management.","Bank covenant monitoring, interest chargeability, panel interest, timely bank submissions, and debt removal from MCA / RERA portals lack a clear owner.","Drawdown commitments, further drawdown approvals, and release / top-up of security or assets lack a defined approval authority.","Account opening / closing, new loan approval, and CS coordination for Board Resolutions are not covered in the process."]
+  },
+  // ── MARKETING ──
+  {
+    id:"MKTG-01",dept:"Marketing",title:"Develop Offline Marketing Campaigns",owner:"HOD-MKTG",driveId:"1Lw16p7JTDqzfB4-R32NOeZFpuXIXkEKt",
+    objective:"To reach the appropriate target group, communicate the brand identity, and maximize leads for a project by building the creative campaign — planning routes, key visuals, brochure, radio ads, and videos.",
+    sipoc:{supplier:"Design Development team (project concept)",input:"Project concept / theme, USPs of the project (Plus Homes — ventilation, lighting, privacy, space)",process:"Marketing handover → Planning route → Creative concept route → Photo shoot & Key Visuals → Brochure → Radio Ads → Concept & Project Videos",output:"Creative Routes, Key Visuals, Brochure, Radio Ads, Videos",customer:"Sales Team, Digital Marketing, Channel Partners, Customers"},
+    rasi:[
+      {activity:"Conduct marketing handover discussion",R:"MKTG Coordinator",A:"—",S:"HOD-D&D",I:"HOD-MKTG"},
+      {activity:"Provide project concept to marketing & creative agency",R:"HOD-D&D",A:"—",S:"Brand Consultant",I:"MKTG Team"},
+      {activity:"Review and select planning route",R:"MGMT",A:"—",S:"HOD-MKTG, Brand Consultant",I:"—"},
+      {activity:"Review and select creative concept route",R:"MGMT",A:"—",S:"HOD-MKTG, Brand Consultant",I:"HOD-Sales, HOD-DM"},
+      {activity:"Finalize Key Visuals and adapt to media",R:"MGMT",A:"—",S:"MKTG Team, Brand Consultant",I:"HOD-Sales, HOD-DM"},
+      {activity:"Finalize project brochure",R:"MKTG Coordinator",A:"MGMT",S:"Brand Consultant, HOD-D&D",I:"HOD-Sales"},
+      {activity:"Finalize Radio Ads",R:"MKTG Coordinator",A:"HOD-Sales",S:"HOD-MKTG",I:"TM, Brand Consultant"},
+      {activity:"Develop Videos (Concept & Project)",R:"MKTG Coordinator",A:"TM",S:"HOD-MKTG, Brand Consultant",I:"HOD-Sales, HOD-DM"}
+    ],
+    kpis:["Creative Route finalized within 4 months","Brochure finalized within 3 months"],
+    kpiTable:[
+      {indicator:"Efficiency",title:"Time taken to finalize the Creative Route",target:"4",unit:"Months",owner:"HOD-MKTG",freq:"Each project"},
+      {indicator:"Efficiency",title:"Time taken to finalize the Brochure",target:"3",unit:"Months",owner:"HOD-MKTG",freq:"Each project"}
+    ],
+    formats:[],
+    references:["Sample Design Brief","Marketing Collateral design mandates","Event Flow"],
+    processDescription:[
+      "The Marketing Coordinator arranges the marketing handover meeting with the full marketing team, the Design team, and the Brand Consultant. The HOD-D&D prepares and presents the project concept that kicks off marketing — typically the Plus Homes concept built on one or more of four USPs (perfect ventilation, lively lighting, utmost privacy, smart space utilization), with the Brand Consultant's support; in rare cases the USP is outside Plus Homes. The Coordinator prepares a Design Brief to hand to the creative agency.",
+      "Based on the Design Brief, the creative agency researches and generates three Planning Routes (broad statements of differentiation). Top Management selects one with the Brand Consultant's help. The agency then details it with Creative Concept Route options, presenting a dummy campaign for each; Top Management selects one Creative Concept Route, freezing the project communication strategy (typically 2–4 months total). The Coordinator communicates the selected route to HOD-Sales and HOD-DM.",
+      "The agency recommends a production house for the photo shoot based on budget; Top Management approves it based on the development size and project strategy. The Coordinator, supported by the Brand Consultant, runs a pre-production meeting governing the visuals expected (costumes, lighting, backgrounds, unit elements).",
+      "The Coordinator selects images from the shoot, compiles them into a deck of layouts, and presents them to Top Management for Key Visual approval, then communicates the selected Key Visuals to HOD-Sales and HOD-DM. The Key Visual is adapted to various media — newspapers, digital ads, hoardings, mobile apps, web pages, and the presentation master used for the Sales Deck.",
+      "For the brochure, the agency decides whether to wait for the Key Visuals or start right after the Creative Route is frozen; if the agency cannot deliver in time, the Marketing Team prepares a standby brochure with mandatory components. Top Management reviews and approves the brochure and defines the print quantity for the project site; brochures may later be revised to include mock-up walkthrough videos.",
+      "For Radio Ads, the Marketing Team obtains the script from the agency, which recommends a radio production house approved by HOD-MKTG. The production house shares voice samples; HOD-Sales finalizes the artists and coordinates the live virtual recording with the Coordinator. After recording, the Coordinator obtains the final output, HOD-Sales approves it and confirms the radio slot.",
+      "For the Concept Video, the agency recommends a production house (approved by Top Management); the Coordinator runs a pre-production meeting, selects the videos, and presents them to Top Management for approval. The Concept Video conveys the project theme and is pushed through Facebook, YouTube, Instagram, theatre and mall screens, and OOH media.",
+      "Separately, the Marketing Team prepares the Project Video — finalizing the script and compiling research on specifications, location, surroundings, and maps for the in-house video team, which also captures drone floor-view footage. Constituents and their approvers: location & vicinity research video and floor-view drone videos (HOD-MKTG); architect's note, landscaping note, mock-up video, and rendered walkthroughs (HOD-D&D). Top Management reviews and approves the videos before rollout."
+    ],
+    raciMatrix:{
+      roles:[
+        {name:"MKTG Coordinator / Team",color:"#e11d48"},
+        {name:"Top Management",color:"#7C3AED"},
+        {name:"HOD-D&D / Brand Consultant",color:"#db2777"},
+        {name:"HOD-Sales / HOD-DM",color:"#d97706"}
+      ],
+      phases:[
+        {id:1,name:"Handover & Strategy Routes",color:"#e11d48",steps:[1,2]},
+        {id:2,name:"Key Visuals & Brochure",color:"#7C3AED",steps:[3,4]},
+        {id:3,name:"Radio Ads & Videos",color:"#d97706",steps:[5,6]}
+      ],
+      steps:[
+        {id:1,title:"Conduct marketing handover & prepare Design Brief",raci:["R","","C",""],desc:"The Coordinator convenes the handover meeting; HOD-D&D presents the project concept (Plus Homes USPs) with the Brand Consultant. The Coordinator prepares the Design Brief for the creative agency.",tags:[{t:"Output: Design Brief → creative agency",c:"output"},{t:"Key milestone — campaign kickoff",c:"key"}]},
+        {id:2,title:"Select Planning Route & Creative Concept Route",raci:["I","R","C","I"],desc:"The agency presents three Planning Routes, then Creative Concept Route options with dummy campaigns. Top Management selects one of each with the Brand Consultant, freezing the communication strategy (2–4 months).",tags:[{t:"🔸 Top Management selects Planning & Creative routes",c:"gate"},{t:"Output: Communication strategy frozen",c:"output"},{t:"KPI: Creative Route within 4 months",c:"key"}]},
+        {id:3,title:"Shoot & finalize Key Visuals, adapt to media",raci:["R","A","C","I"],desc:"Top Management approves the production house; a pre-production meeting governs the shoot. The Coordinator compiles a layout deck for Top Management's Key Visual approval, then adapts the Key Visual to newspapers, digital ads, hoardings, apps, web, and the Sales Deck master.",tags:[{t:"🔸 Top Management approves production house & Key Visuals",c:"gate"},{t:"Output: Key Visuals adapted to all media",c:"output"}]},
+        {id:4,title:"Finalize project brochure",raci:["R","A","C","I"],desc:"The agency builds the brochure (Marketing prepares a standby if delayed) with mandatory components. Top Management approves it and sets print quantity for the site; later revisions may add mock-up walkthroughs.",tags:[{t:"🔸 Top Management approves brochure & print quantity",c:"gate"},{t:"Output: Brochure finalized",c:"output"},{t:"KPI: Brochure within 3 months",c:"key"}]},
+        {id:5,title:"Finalize Radio Ads",raci:["R","","C","A"],desc:"Marketing obtains the script; HOD-MKTG approves the radio production house. HOD-Sales finalizes artists, joins the live recording, approves the final output, and confirms the radio slot.",tags:[{t:"🔸 HOD-Sales approves output & confirms slot",c:"gate"},{t:"Output: Radio Ads ready",c:"output"}]},
+        {id:6,title:"Develop Concept & Project Videos",raci:["R","A","C","I"],desc:"The Concept Video (theme) is produced via an approved house and pushed across social, theatre, mall, and OOH media. The Project Video combines location research, drone floor views, architect / landscaping notes, mock-up, and walkthroughs — approved by HOD-MKTG / HOD-D&D and finally by Top Management.",tags:[{t:"🔸 Top Management approves videos before rollout",c:"gate"},{t:"Output: Concept & Project Videos rolled out",c:"output"}]}
+      ]
+    },
+    opportunities:["The Target Audience is decided based on experience and gut feeling, not on hard data from consumer research.","The marketing budget is not documented at the time of finalizing the communication strategy."]
+  },
+  {
+    id:"MKTG-02",dept:"Marketing",title:"Develop Digital Marketing Campaigns",owner:"HOD-DM",driveId:"1tg1Wym0RRO_CrBwckwSER7Hrev5ihHBj",
+    objective:"Lead generation and maintaining a presence on digital platforms — setting the digital spend, building project microsites, managing platform partners, and monitoring channel-wise lead performance.",
+    sipoc:{supplier:"Finalize project concept (Marketing / Top Management)",input:"High-level launch strategy (name, logo, tagline, target audience, messaging)",process:"Finalize digital budget → Develop microsite → Manage platform partners → Monitor channel leads & modify campaign",output:"Project entity and campaign on CRM, leads",customer:"Pre-Sales / Sales Team, Top Management"},
+    rasi:[
+      {activity:"Finalize Digital Marketing budget",R:"HOD-DM",A:"MGMT",S:"HOD-MKTG",I:"—"},
+      {activity:"Develop microsite for each project",R:"HOD-DM",A:"—",S:"IT Team, MKTG",I:"—"},
+      {activity:"Manage partners for Digital Marketing",R:"HOD-DM",A:"—",S:"—",I:"MGMT"},
+      {activity:"Monitor channel-wise leads and modify campaign",R:"HOD-DM",A:"—",S:"DM Team",I:"HOD-MKTG"}
+    ],
+    kpis:["Number of leads per channel as agreed","Cost per lead per channel as agreed","Impressions / views as agreed"],
+    kpiTable:[
+      {indicator:"Effectiveness",title:"Number of leads for various channels",target:"As agreed",unit:"Nos.",owner:"HOD-MKTG",freq:"Each project"},
+      {indicator:"Effectiveness",title:"Cost per lead for various channels",target:"As agreed",unit:"INR",owner:"HOD-MKTG",freq:"Each project"},
+      {indicator:"Effectiveness",title:"Number of impressions / number of views",target:"As agreed",unit:"Nos.",owner:"HOD-MKTG",freq:"Each project"}
+    ],
+    formats:["RBD-FOR-MKTG-01: Digital Marketing Performance Tracker","RBD-FOR-MKTG-02: Lead Status Tracker"],
+    references:[],
+    processDescription:[
+      "HOD-DM proposes the Digital Marketing spend based on the total marketing budget, with inputs from HOD-MKTG. Top Management advises and approves the budget or suggests tweaks. A typical template of digital marketing spends is maintained as a reference.",
+      "The Digital Marketing team develops a microsite for each project with the objective of driving leads — any campaign drives potential customers to the microsite to submit the enquiry form, which captures data in the CRM platform. HOD-DM obtains content from the marketing team and coordinates with the IT team to build the microsite, reviewing and finalizing it (or having it modified) as required.",
+      "HOD-DM manages the platform partners (Google, Meta, etc.) to understand the latest industry trends with a perspective of early adoption, helping Digital Marketing leverage early-adoption benefits and retain a competitive edge.",
+      "HOD-DM records and monitors the spend on each platform with DM Team support to ensure it stays in line with project expectations, and circulates the actual spend analysis with HOD-MKTG for inputs and suggestions."
+    ],
+    raciMatrix:{
+      roles:[
+        {name:"HOD-DM",color:"#e11d48"},
+        {name:"Top Management",color:"#7C3AED"},
+        {name:"HOD-MKTG",color:"#db2777"},
+        {name:"IT / DM Team",color:"#d97706"}
+      ],
+      phases:[
+        {id:1,name:"Budget & Microsite Setup",color:"#e11d48",steps:[1,2]},
+        {id:2,name:"Partners & Performance Monitoring",color:"#7C3AED",steps:[3,4]}
+      ],
+      steps:[
+        {id:1,title:"Finalize Digital Marketing budget",raci:["R","A","C",""],desc:"HOD-DM proposes the digital spend from the total marketing budget with HOD-MKTG inputs; Top Management approves or tweaks it against a standard spend template.",tags:[{t:"🔸 Top Management approves digital budget",c:"gate"},{t:"Output: Approved digital spend plan",c:"output"}]},
+        {id:2,title:"Develop project microsite for lead capture",raci:["R","","","C"],desc:"DM builds a microsite per project to drive leads — campaigns route prospects to the enquiry form, capturing data in the CRM. HOD-DM sources content from Marketing and coordinates with IT to build, review, and finalize it.",tags:[{t:"Output: Project microsite live with CRM enquiry capture",c:"output"},{t:"Key milestone",c:"key"}]},
+        {id:3,title:"Manage platform partners for early adoption",raci:["R","I","",""],desc:"HOD-DM manages Google / Meta and other partners to track industry trends and adopt them early, retaining a competitive edge.",tags:[{t:"Output: Early-adoption advantage on platforms",c:"output"}]},
+        {id:4,title:"Monitor channel-wise leads & spend, modify campaign",raci:["R","","I","C"],desc:"HOD-DM records and monitors platform spend with DM Team support and circulates the actual spend analysis to HOD-MKTG for inputs, modifying the campaign to stay within expectations.",tags:[{t:"Output: Spend analysis & campaign adjustments",c:"output"}]}
+      ]
+    },
+    opportunities:[]
+  },
+  {
+    id:"MKTG-03",dept:"Marketing",title:"Activate Marketing Campaigns",owner:"HOD-MKTG",driveId:"1cp-cro_iKBxjnv2jMoLZuLQnG60rq1nn",
+    objective:"To generate leads for the project as per the planned marketing campaigns (offline and digital) — activating channels on the CRM, planning communication, processing spend, and revising strategy from feedback.",
+    sipoc:{supplier:"Launch project (Marketing)",input:"Marketing plans (offline and digital)",process:"Activate offline channels → Appoint vendors & implement → Activate digital channels → Plan WhatsApp communication → Process invoices → Revise strategy",output:"Leads recorded in CRM",customer:"Pre-Sales (Arrange site visit), Project Sales Team, Channel Partners"},
+    rasi:[
+      {activity:"Activate offline marketing channels",R:"MKTG Coordinator",A:"—",S:"IT Team",I:"MKTG"},
+      {activity:"Appoint vendors and drive implementation",R:"MKTG PM",A:"—",S:"MKTG",I:"HOD-MKTG"},
+      {activity:"Activate digital marketing channels",R:"HOD-DM",A:"—",S:"IT Team",I:"—"},
+      {activity:"Plan marketing communication (WhatsApp calendar)",R:"MKTG Coordinator",A:"HOD-MKTG",S:"Automation Executive",I:"—"},
+      {activity:"Process invoices with spend tags",R:"MKTG PM",A:"HOD-Sales",S:"—",I:"Finance Team"},
+      {activity:"Revise marketing strategy (offline and digital)",R:"MKTG PM",A:"HOD-MKTG",S:"Project Sales Team, MKTG",I:"—"}
+    ],
+    kpis:["Number of leads generated meets target"],
+    kpiTable:[
+      {indicator:"Efficiency",title:"Number of leads generated",target:"As targeted",unit:"Nos.",owner:"HOD-MKTG",freq:"Each project"}
+    ],
+    formats:["RBD-FOR-MKTG-04: Communication Calendar","RBD-FOR-MKTG-01: Digital Marketing Performance Tracker"],
+    references:[],
+    processDescription:[
+      "The Marketing Coordinator initiates all planned offline marketing campaigns on the CRM (Zoho) with IT support and informs the Marketing Team of the campaigns launched.",
+      "The Marketing Project Managers (MKTG PMs) implement the various channels through vendors appointed via a 3-quotation procurement process. The Marketing Team supports activation by providing the required content, and MKTG PMs keep HOD-MKTG informed for any necessary intervention.",
+      "HOD-DM activates the various digital channels using content from the marketing (content) team as per the decided spends, keeping Top Management informed of the rollout.",
+      "At the end of each month, the Coordinator prepares the next month's WhatsApp communication calendar (RBD-FOR-MKTG-04) for each customer bucket per the segmentation, outlining broad topics — the detailed message content is not yet listed at month start.",
+      "MKTG PMs provide inputs incorporating project sales team feedback; based on this the Coordinator plans the detailed content (text with photos / videos) under the broad topics, planning a week or two at a time. For example, the Plus Homes topic is elaborated into ventilation, landscaping, illumination, open spaces, and approach roads. The communication also includes detailed content circulated to Channel Partners to share with their prospect pool.",
+      "The Coordinator shares the detailed content sheet with the Automation Executive, who pushes it through the WhatsApp-bot vendor (platform plus Meta approval) — currently Verloop — where messages are submitted for approval and scheduled per customer bucket.",
+      "MKTG PMs receive vendor invoices for campaign implementation, tag them with appropriate expense tags, get HOD-Sales approval, and submit them to the Finance Team.",
+      "MKTG PMs coordinate with the Pre-Sales Team and review the Zoho CRM campaign performance report to monitor each channel, visiting the site to collect subjective feedback from the Project Sales Team on lead quality. In the fortnightly meeting they propose channel and campaign changes to HOD-MKTG, who approves changes after discussion; MKTG PMs implement them. Digital Marketing submits daily, weekly, and monthly channel-wise lead and spend reports (RBD-FOR-MKTG-01) to Top Management, which assesses performance and decides any digital strategy / spend changes."
+    ],
+    raciMatrix:{
+      roles:[
+        {name:"MKTG Coordinator",color:"#e11d48"},
+        {name:"MKTG PM",color:"#db2777"},
+        {name:"HOD-MKTG / HOD-DM",color:"#7C3AED"},
+        {name:"Sales / Finance / Automation",color:"#d97706"}
+      ],
+      phases:[
+        {id:1,name:"Channel Activation",color:"#e11d48",steps:[1,2]},
+        {id:2,name:"Communication Planning",color:"#db2777",steps:[3,4]},
+        {id:3,name:"Spend & Strategy Revision",color:"#7C3AED",steps:[5,6]}
+      ],
+      steps:[
+        {id:1,title:"Activate offline & digital channels on CRM",raci:["R","","C","C"],desc:"The Coordinator initiates offline campaigns on Zoho with IT support; HOD-DM activates digital channels using content team material per decided spends, keeping Top Management informed.",tags:[{t:"Output: Campaigns live on Zoho CRM",c:"output"}]},
+        {id:2,title:"Appoint vendors & drive implementation",raci:["C","R","I",""],desc:"MKTG PMs implement channels through vendors appointed via a 3-quotation process, with Marketing providing content, keeping HOD-MKTG informed for intervention.",tags:[{t:"🔸 3-quotation vendor procurement",c:"gate"},{t:"Output: Channels implemented",c:"output"}]},
+        {id:3,title:"Plan monthly WhatsApp communication calendar",raci:["R","","A","C"],desc:"At month-end the Coordinator builds the next month's WhatsApp calendar (RBD-FOR-MKTG-04) by customer bucket with broad topics; detailed content is planned a week or two ahead with MKTG PM and sales feedback.",tags:[{t:"Output: Communication Calendar prepared",c:"output"}]},
+        {id:4,title:"Schedule content via WhatsApp-bot vendor",raci:["R","","","C"],desc:"The Coordinator shares the content sheet with the Automation Executive, who pushes it through the WhatsApp-bot vendor (Verloop) for Meta approval and bucket-wise scheduling, including content for Channel Partners.",tags:[{t:"🔸 Meta approval before scheduling",c:"gate"},{t:"Output: Messages scheduled per bucket",c:"output"}]},
+        {id:5,title:"Process vendor invoices with spend tags",raci:["","R","","A"],desc:"MKTG PMs tag vendor invoices with expense tags, get HOD-Sales approval, and submit them to the Finance Team.",tags:[{t:"🔸 HOD-Sales approval on tagged invoices",c:"gate"},{t:"Output: Invoices submitted to Finance",c:"output"}]},
+        {id:6,title:"Monitor channels & revise strategy",raci:["","R","A","C"],desc:"MKTG PMs review Zoho performance and on-site sales feedback, propose channel / campaign changes in the fortnightly meeting for HOD-MKTG approval, and implement them. DM submits daily / weekly / monthly lead & spend reports (RBD-FOR-MKTG-01) to Top Management for digital strategy decisions.",tags:[{t:"🔸 HOD-MKTG approves strategy changes",c:"gate"},{t:"Output: Revised campaign & channel strategy",c:"output"}]}
+      ]
+    },
+    opportunities:[]
+  },
+  {
+    id:"MKTG-04",dept:"Marketing",title:"Support Miscellaneous Marketing Activities",owner:"HOD-MKTG",driveId:"1FQll_uJBBBMiUeZSdZJ5fN4CGFDVhTd1",
+    objective:"To support various initiatives for other departments — providing launch sales support, planning and conducting events, activating new projects at existing societies, and servicing ad-hoc requests.",
+    sipoc:{supplier:"Launch project (Marketing)",input:"Lead (mobile number), event / initiative requirements",process:"Support sales at launch → Plan & conduct events → Activate new project at existing society → Service ad-hoc requests",output:"Events, initiatives, brand-building activities",customer:"Sales Team, CRM, HR, CSR, Channel Partners, Customers"},
+    rasi:[
+      {activity:"Support sales team during launch",R:"MKTG",A:"—",S:"HOD-Sales",I:"HOD-MKTG"},
+      {activity:"Plan and conduct events",R:"Event Coordinator",A:"HOD-MKTG",S:"HOD-Sales, HOD-FM, MKTG",I:"—"},
+      {activity:"Activate new project at existing society",R:"Event Coordinator",A:"HOD-MKTG",S:"HOD-Sales, HOD-FM, CRM Team",I:"—"},
+      {activity:"Support ad-hoc requests",R:"MKTG",A:"—",S:"HODs",I:"—"}
+    ],
+    kpis:["Stakeholder satisfaction with marketing support"],
+    kpiTable:[
+      {indicator:"Effectiveness",title:"Stakeholder satisfaction with marketing support for events & initiatives",target:"As agreed",unit:"—",owner:"HOD-MKTG",freq:"Per initiative"}
+    ],
+    formats:[],
+    references:["Event Flow"],
+    processDescription:[
+      "During a project launch the Marketing team may be told by HOD-Sales that the sales team is short-staffed; in such cases Marketing supports the Project Sales team on site for handling customer visits, keeping HOD-MKTG informed of the activity and its expected duration.",
+      "Several events may be conducted at various times — CP Events, Monsoon Masti, festival events (Ganeshotsav, Diwali), Project Launch, Possession (community) events, HR and CSR events, and The Drawing Board.",
+      "The Event Coordinator plans each event — location, facility, vendors, permissions, coordination, give-aways, event collaterals (invitee communication), venue branding, food menu, and specific activities — with inputs and support from the Marketing team, HOD-FM, HOD-Sales, and Project Sales teams. For example, for CP Meets the Coordinator visits 3–4 venues, collects quotations, evaluates inclusions, and finalizes one, and selects from 2–3 event agencies in the pre-existing pool based on past performance and commercial offers.",
+      "The Event Coordinator also plans the sequence of events (see Event Flow), the CP and EOI Meet presentation, CP felicitation, and rewards / recognition (trophies, certificates, vouchers). The video team prepares a highlight / montage video and attendee testimonials for social posting.",
+      "The Event Coordinator plans activation of new projects at existing societies; HOD-Sales supports setting up a stall for the newly launched project to generate leads from the existing society.",
+      "Sales, CRM, HR, and CSR teams approach Marketing with ad-hoc requests — collaterals, new initiatives, society events, The Invisible Ones, brand-building (awards, LinkedIn posts, Know Homes), project / construction / training videos for RBIPL, and the annual newsletter for employees and customers. The requesting entity suggests the timeline and desired outcome; Marketing confirms with the HOD and services the requirement."
+    ],
+    raciMatrix:{
+      roles:[
+        {name:"MKTG Team",color:"#e11d48"},
+        {name:"Event Coordinator",color:"#db2777"},
+        {name:"HOD-MKTG",color:"#7C3AED"},
+        {name:"Sales / FM / CRM / HR",color:"#d97706"}
+      ],
+      phases:[
+        {id:1,name:"Launch Support",color:"#e11d48",steps:[1]},
+        {id:2,name:"Events & Activations",color:"#db2777",steps:[2,3]},
+        {id:3,name:"Ad-hoc Requests",color:"#7C3AED",steps:[4]}
+      ],
+      steps:[
+        {id:1,title:"Support sales team during launch",raci:["R","","I","C"],desc:"On HOD-Sales's request for short-staffing, Marketing supports the Project Sales team on site for customer visits, informing HOD-MKTG of the activity and duration.",tags:[{t:"Output: On-site sales support during launch",c:"output"}]},
+        {id:2,title:"Plan & conduct events",raci:["C","R","A","C"],desc:"The Event Coordinator plans each event end-to-end (venue, vendors, permissions, collaterals, branding, sequence, felicitation, rewards) with Marketing, FM, and Sales support, evaluating 3–4 venues and 2–3 agencies; the video team produces highlight and testimonial videos.",tags:[{t:"🔸 HOD-MKTG approves event plan",c:"gate"},{t:"Output: Events executed",c:"output"}]},
+        {id:3,title:"Activate new project at existing society",raci:["C","R","A","C"],desc:"The Event Coordinator plans activation at existing societies; HOD-Sales supports setting up a stall for the new project to generate leads from the society.",tags:[{t:"🔸 HOD-MKTG approves activation",c:"gate"},{t:"Output: Society activation & leads",c:"output"}]},
+        {id:4,title:"Service ad-hoc requests from departments",raci:["R","","C","C"],desc:"Sales, CRM, HR, and CSR raise ad-hoc requests (collaterals, initiatives, society events, brand-building, videos, annual newsletter); the requester sets timeline and outcome, and Marketing services it after HOD confirmation.",tags:[{t:"Output: Ad-hoc initiatives delivered",c:"output"}]}
+      ]
+    },
+    opportunities:[]
+  },
+  // ── STORES ──
+  {
+    id:"SD-01",dept:"Stores",title:"Manage Material on Site",owner:"HOD-SD",driveId:"1UC5qCytwx510F9MR4KdFW5X13bTonUES",
+    objective:"Ensure receipt and storage of materials such that available inventory is issued to the execution team on time — from goods receipt and quality inspection through tagging, issue, reconciliation, and scrap management.",
+    sipoc:{supplier:"Mobilize project site (HO Planning), Drive execution",input:"Stores size and location, POs, material issue slips",process:"Finalize store → Review POs → Record goods receipt & inspection → Manage rejections → Tag & stack → Foreclose unfilled POs → Issue material → Reconcile slips → Manage scrap",output:"Material issued to execution team",customer:"Execution Team (Drive execution)"},
+    rasi:[
+      {activity:"Finalize stores location and size",R:"HO Planning",A:"—",S:"—",I:"HOD-Stores"},
+      {activity:"Review POs generated for project material",R:"Project Store Executive",A:"—",S:"HOD-Stores, Purchase Team",I:"—"},
+      {activity:"Record goods receipt once material arrives",R:"Project Store Executive",A:"—",S:"Project Engineer, Quality Engineer",I:"—"},
+      {activity:"Manage rejected material",R:"Project Store Executive",A:"Quality Engineer",S:"—",I:"Purchase Team"},
+      {activity:"Tag and stack material in the store",R:"Project Store Executive",A:"—",S:"—",I:"—"},
+      {activity:"Foreclose PO line items if material not received",R:"Project Store Executive",A:"—",S:"—",I:"Purchase Team"},
+      {activity:"Issue material",R:"Project Store Executive",A:"—",S:"Project Planning Engineer",I:"Project Engineer"},
+      {activity:"Reconcile manual material issue slips",R:"Project Store Executive",A:"—",S:"Project Planning Engineer",I:"—"},
+      {activity:"Manage scrap of material",R:"Project Manager",A:"HOD-Stores",S:"—",I:"MGMT"}
+    ],
+    kpis:["Zero hours average delay in material issue affecting project progress"],
+    kpiTable:[
+      {indicator:"Efficiency",title:"Average delay in project progress due to material issue",target:"0",unit:"Hours",owner:"HOD-Stores",freq:"Monthly"}
+    ],
+    formats:[],
+    references:["Daily Progress Report"],
+    processDescription:[
+      "HO Planning informs HOD-Stores of the size and location of the store allocated for each new project, represented on the Site Logistics Plan.",
+      "Each PO carries the Project Store Executive's name and contact so the vendor can communicate about material arriving on site. The Executive has visibility of POs raised on vendors and, based on stock availability and expected site demand, follows up with vendors on delivery times for critical materials — escalating to HOD-Stores or the Purchase Team for help with follow-up when needed.",
+      "Once material arrives, the Executive gets it weighed (or counted) for confirmation against the PO and unloaded at the store or the building for which it was ordered. Some materials are stored at the point of use (bricks, blocks, tile, granite, reinforcement, structural steel, batching-plant inputs). For specified materials (plywood, tiles, granite, cement, 10/20 mm metal, crushed sand, fly ash, wooden doors, structural steel, reinforcement) the Quality Engineer is invited to inspect the stock before acceptance. The Executive records the Goods Receipt Note against the PO line items on High-rise.",
+      "If received material is rejected by the Quality Engineer, the Executive quarantines the rejected inventory in a designated area and informs the Purchase Team to coordinate its return.",
+      "Once unloaded, the Executive tags and stacks the material in the store at its pre-defined rack location, ensuring it is readily available for issue when requisitioned.",
+      "If a quantity (or an entire PO line item) is not received within 8 days despite follow-up, the Executive forecloses the line item on High-rise and informs the vendor and Purchase Team.",
+      "The Executive receives the material issue slip generated by the Project Planning Engineer and hands the requisite material to the Project Engineer who created the request. Most requisitions come via High-rise ERP, but where a Project Engineer sends a manual slip, the Executive verifies available stock, issues the material, and continuously follows up with the Project Planning Engineer to create the corresponding High-rise record for the quantity issued.",
+      "The Project Manager intermittently monitors accumulated scrap inventory and requests HOD-Stores when it crosses a threshold. HOD-Stores sends a team member to verify, then invites scrap vendors and awards the scrap sale via competitive bidding, keeping Top Management informed."
+    ],
+    raciMatrix:{
+      roles:[
+        {name:"Project Store Executive",color:"#b45309"},
+        {name:"HO Planning / HOD-Stores",color:"#3b82f6"},
+        {name:"Quality / Project Engineer",color:"#059669"},
+        {name:"Purchase / Mgmt",color:"#7C3AED"}
+      ],
+      phases:[
+        {id:1,name:"Store Setup & Goods Receipt",color:"#b45309",steps:[1,2]},
+        {id:2,name:"Rejections, Tagging & Foreclosure",color:"#059669",steps:[3,4,5]},
+        {id:3,name:"Issue, Reconciliation & Scrap",color:"#7C3AED",steps:[6,7,8]}
+      ],
+      steps:[
+        {id:1,title:"Finalize store & review POs",raci:["R","C","","C"],desc:"HO Planning sets the store size and location on the Site Logistics Plan. The Store Executive has visibility of POs and follows up with vendors on critical-material delivery, escalating to HOD-Stores / Purchase when needed.",tags:[{t:"Output: Store finalized; PO follow-up underway",c:"output"}]},
+        {id:2,title:"Record goods receipt with quality inspection",raci:["R","","C","",],desc:"On arrival, material is weighed / counted against the PO and unloaded at the store or point of use. The Quality Engineer inspects specified materials before acceptance, and the Executive marks the Goods Receipt Note against PO line items on High-rise.",tags:[{t:"🔸 Quality Engineer inspection before acceptance",c:"gate"},{t:"Output: GRN recorded on High-rise",c:"output"}]},
+        {id:3,title:"Manage rejected material",raci:["R","","A","I"],desc:"Material rejected by the Quality Engineer is quarantined in a designated area, and the Purchase Team is informed to coordinate its return.",tags:[{t:"🔸 Quality Engineer approves rejection",c:"gate"},{t:"Output: Rejected stock quarantined & returned",c:"output"}]},
+        {id:4,title:"Tag & stack material",raci:["R","","","",],desc:"Unloaded material is tagged and stacked at its pre-defined rack location so it is readily available for issue.",tags:[{t:"Output: Material tagged & stacked",c:"output"}]},
+        {id:5,title:"Foreclose unfilled PO line items",raci:["R","","","I"],desc:"If a quantity or PO line item is not received within 8 days despite follow-up, the Executive forecloses the line item on High-rise and informs the vendor and Purchase Team.",tags:[{t:"🔸 Foreclose after 8 days non-receipt",c:"gate"},{t:"Output: PO line foreclosed on High-rise",c:"output"}]},
+        {id:6,title:"Issue material against issue slip",raci:["R","","I","",],desc:"The Executive receives the issue slip from the Project Planning Engineer and hands material to the requesting Project Engineer; most requisitions are on High-rise ERP.",tags:[{t:"Output: Material issued to execution team",c:"output"},{t:"Key milestone",c:"key"}]},
+        {id:7,title:"Reconcile manual issue slips",raci:["R","","C","",],desc:"For manual issue slips, the Executive verifies stock, issues material, and continuously follows up with the Project Planning Engineer to create the matching High-rise record for the quantity issued.",tags:[{t:"Output: Manual issues reconciled on High-rise",c:"output"}]},
+        {id:8,title:"Manage scrap sale",raci:["C","R","","A"],desc:"The Project Manager monitors scrap inventory and requests HOD-Stores at a threshold; HOD-Stores verifies, invites scrap vendors, and awards the sale via competitive bidding, keeping Top Management informed.",tags:[{t:"🔸 HOD-Stores approves scrap sale via bidding",c:"gate"},{t:"Output: Scrap sold; Management informed",c:"output"}]}
+      ]
+    },
+    opportunities:["There is no system / specific rule for the Project Store Executive to foreclose PO line items — it relies on their experience.","For manually generated material issue slips, the Executive relies on memory to follow up and create the High-rise ERP record; if missed, material reconciliation becomes difficult."]
   }
 ];
 
@@ -2148,7 +2623,59 @@ const GAPS = [
   {sop:"ST-02",cat:"Data / Integration",title:"Customer profiling data collected during mock-up is not structured in Zoho CRM",desc:"Sales Executives gather customer insights (purpose of purchase, budget, competing properties considered, key objections) during the mock-up walkthrough, but this data is entered in free text in Zoho CRM. No structured fields or standard questions exist — data quality is entirely RM-dependent."},
   {sop:"ST-02",cat:"Control / Compliance",title:"Mandatory Plus Homes communication during walkthrough is not audited",desc:"The SOP requires Sales Executives to cover specific Plus Homes communication aspects (Perfect Ventilation, Lively Light, Utmost Privacy, Smart Space) during every walkthrough, but no mechanism exists to verify compliance — no checklist, mystery shopper, or sales call recording review."},
   {sop:"ST-02",cat:"Process Logic",title:"VMS mobile number matching is a best-effort practice with no system enforcement",desc:"The Reception Executive must try to match the visitor's mobile number to an existing lead in Zoho CRM — but this is a manual, judgment-dependent step. No system validation or prompt exists to enforce the match before a new VMS entry is created, perpetuating duplicate leads."},
-  {sop:"ST-02",cat:"Coordination",title:"No structured customer context handover from RM to Sales Executive at site",desc:"The RM introduces the visiting customer to the Sales Executive, but no formal context transfer occurs — the Sales Executive is expected to retrieve history from Zoho CRM on their phone. Lead history, prior interactions, stated budget, and project interest may not be communicated before the visit begins."}
+  {sop:"ST-02",cat:"Coordination",title:"No structured customer context handover from RM to Sales Executive at site",desc:"The RM introduces the visiting customer to the Sales Executive, but no formal context transfer occurs — the Sales Executive is expected to retrieve history from Zoho CRM on their phone. Lead history, prior interactions, stated budget, and project interest may not be communicated before the visit begins."},
+
+  // ── AC-01 ──
+  {sop:"AC-01",cat:"Data / Integration",title:"Direct bank (loan) receipts have no automatic customer attribution",desc:"Loan disbursements arrive directly from banks with no automatic payer identification — tracing requires manual investigation and UTR matching by the CRM team, delaying reconciliation and risking misallocation of receipts."},
+  {sop:"AC-01",cat:"Process Logic",title:"Virtual accounts not mandated or incentivised",desc:"Virtual accounts have been implemented and would vastly improve traceability, but their use is neither incentivised nor enforced — manual receipt tracing continues across Accounts, Sales and CRM."},
+  {sop:"AC-01",cat:"Control / Compliance",title:"No rule for extra-parking and material-transfer receipts",desc:"Receipts from selling extra parking have no defined process, and there is no framework governing when a material / inter-site transfer is or is not recorded as an invoice — creating inconsistent accounting treatment."},
+  {sop:"AC-01",cat:"Coordination",title:"Reconciliation depends on manual statement matching",desc:"The 3rd-of-month receipt cut-off relies on the CRM team manually matching the twice-daily bank statement to customers; no automated match-and-flag exists, so unmatched receipts can slip past the cut-off."},
+
+  // ── AC-02 ──
+  {sop:"AC-02",cat:"Process Logic",title:"No automated payment-priority rule engine",desc:"Payment priority is decided manually by senior stakeholders using invoice date, terms and criticality; no rule engine prioritising by value, vendor type or ageing exists, leaving scope for inconsistent or subjective release decisions."},
+  {sop:"AC-02",cat:"Control / Compliance",title:"No fixed payment run",desc:"Payments are released ad-hoc rather than on a fixed weekly or fortnightly run, straining the accounting process and making cash planning harder."},
+  {sop:"AC-02",cat:"Coordination",title:"Contractor fortnightly invoice cycle not enforced",desc:"Although a 16th/1st fortnightly invoice cycle is defined for contractors, invoices arrive daily with demands for priority payment; the cycle is not system-enforced, putting strain on billing, planning and quality."},
+  {sop:"AC-02",cat:"Data / Integration",title:"Payroll and bill-booking cut-offs not system-enforced",desc:"HR payroll data arrives at the last minute; to meet the 7th salary and TDS deadlines, payroll and bill booking must close by the 4th, but no system cut-off enforces this — risking delayed salary and TDS compliance."},
+
+  // ── AC-03 ──
+  {sop:"AC-03",cat:"Control / Compliance",title:"No compliance calendar with automated reminders",desc:"GST (11/13/20/22), TDS/TCS (7/15) and RERA quarterly/annual deadlines are tracked manually; no calendar auto-alerts the responsible owner ahead of each due date, leaving compliance dependent on individual memory."},
+  {sop:"AC-03",cat:"Data / Integration",title:"RERA document compilation is manual and untracked",desc:"RERA registration and quarterly/annual filings require manually compiling multiple certificates (Architect's, CA's, Engineer's) from internal teams with no tracked checklist or status board for what has been collected versus pending."},
+  {sop:"AC-03",cat:"Process Logic",title:"Salary TDS data arrives too late",desc:"Salary details are received from HR at the last minute, jeopardising the 7th-of-month TDS payment and filing deadline; no advanced cut-off is enforced to protect the compliance date."},
+  {sop:"AC-03",cat:"Coordination",title:"Assessment-notice response ownership is ad-hoc",desc:"Responses to direct/indirect tax and PF/PT/ESIC assessment notices depend on case-by-case coordination between Accounts, HR and external consultants with no tracked workflow, response template, or turnaround SLA."},
+
+  // ── AC-04 ──
+  {sop:"AC-04",cat:"Process Logic",title:"Treasury not split into operations vs growth capital",desc:"Current-business operations funding and growth-capital (new land acquisition) funding share a single flow, even though their cadence, documentation and approval paths differ materially."},
+  {sop:"AC-04",cat:"Control / Compliance",title:"No debt covenant or leverage policy and owner",desc:"There is no agreed matrix capping debt (e.g. debt-to-net-worth or debt-equity range) and no defined owner for monitoring bank covenants, current/panel interest, or timely submission of details to banks and removal of debt from MCA/RERA portals."},
+  {sop:"AC-04",cat:"Data / Integration",title:"No daily cashflow view or surplus-deployment policy",desc:"Cashflow is reviewed monthly with a 3-month look-ahead, but there is no daily/weekly monitoring and no policy for deploying excess/surplus cash available in any project."},
+  {sop:"AC-04",cat:"Coordination",title:"Drawdown and security approval authority undefined",desc:"Drawdown commitments, further drawdown approvals, and release / top-up of security or assets lack a defined approval authority; account opening/closing and CS coordination for Board Resolutions on new loans are not covered in the process."},
+
+  // ── MKTG-01 ──
+  {sop:"MKTG-01",cat:"Data / Integration",title:"Target audience is not data-driven",desc:"The target audience for a campaign is decided based on experience and gut feeling rather than hard data from consumer research, weakening targeting accuracy and media planning."},
+  {sop:"MKTG-01",cat:"Control / Compliance",title:"Marketing budget undocumented at strategy lock",desc:"The marketing budget is not documented at the time the communication strategy is finalised, reducing spend accountability and making later budget-versus-actual comparison difficult."},
+  {sop:"MKTG-01",cat:"Process Logic",title:"No enforced SLA on creative-agency deliverables",desc:"Planning route, creative route, key visuals and brochure carry target durations (3–4 months) but no enforced milestone SLAs or escalation path when the agency slips, allowing the launch timeline to drift."},
+  {sop:"MKTG-01",cat:"Coordination",title:"Standby-brochure trigger is informal",desc:"The fallback to an in-house standby brochure when the agency cannot deliver in time has no defined trigger date, risking print and distribution delays right before launch."},
+
+  // ── MKTG-02 ──
+  {sop:"MKTG-02",cat:"Data / Integration",title:"Channel spend and lead data tracked manually",desc:"Channel-wise spend, leads, cost-per-lead and impressions are recorded manually in trackers; there is no automated daily pull from Google/Meta into a single consolidated dashboard."},
+  {sop:"MKTG-02",cat:"Process Logic",title:"No automated budget-pacing alerts",desc:"Digital spend is monitored against expectation manually; no alert fires when a channel over- or under-paces its budget or breaches its target cost-per-lead, so corrections are reactive."},
+  {sop:"MKTG-02",cat:"Control / Compliance",title:"Microsite-to-CRM lead capture not monitored",desc:"The enquiry-form-to-CRM data capture has no automated integrity check; dropped, duplicated or malformed leads from the microsite can go unnoticed, understating channel performance."},
+
+  // ── MKTG-03 ──
+  {sop:"MKTG-03",cat:"Coordination",title:"WhatsApp content planned only a week or two ahead",desc:"Detailed WhatsApp content is planned only one to two weeks in advance under broad monthly topics, risking gaps and inconsistency in bucket-wise customer and channel-partner communication."},
+  {sop:"MKTG-03",cat:"Data / Integration",title:"Channel performance feedback is subjective",desc:"Channel effectiveness is assessed from subjective on-site sales-team feedback plus Zoho reports; there is no automated lead-quality scoring per channel to objectively decide where to cut or scale spend."},
+  {sop:"MKTG-03",cat:"Process Logic",title:"Spend-tagged invoice routing is manual",desc:"Vendor invoices are manually tagged with expense tags and routed for HOD-Sales approval to Finance; no automated tagging or approval workflow exists, slowing reconciliation of campaign spend."},
+  {sop:"MKTG-03",cat:"Control / Compliance",title:"WhatsApp-bot approval and scheduling untracked",desc:"Message approval through the WhatsApp-bot vendor (Verloop/Meta) and bucket-wise scheduling are manual, with no tracked approval status or alert when a message is rejected or fails to send."},
+
+  // ── MKTG-04 ──
+  {sop:"MKTG-04",cat:"Process Logic",title:"No standard event playbook or ROI capture",desc:"Events (CP meets, festivals, launch, possession, HR/CSR) are planned case-by-case without a standard checklist, vendor-pool SLA, or post-event lead/ROI capture, so learnings are not carried forward."},
+  {sop:"MKTG-04",cat:"Control / Compliance",title:"Ad-hoc requests lack intake and SLA",desc:"Cross-department ad-hoc requests (collaterals, initiatives, videos, newsletters) have no formal intake, prioritisation or turnaround SLA — service quality is entirely person-dependent."},
+  {sop:"MKTG-04",cat:"Coordination",title:"Launch sales-support is unplanned",desc:"Marketing support to short-staffed project sales teams during launch is reactive, with no planned roster or tracking of who supported and for how long."},
+
+  // ── SD-01 ──
+  {sop:"SD-01",cat:"Control / Compliance",title:"No system rule for PO line-item foreclosure",desc:"Foreclosing a PO line item after 8 days of non-receipt relies entirely on the Project Store Executive's experience; no system rule auto-flags or forecloses overdue lines, so they can linger and distort open-PO reporting."},
+  {sop:"SD-01",cat:"Data / Integration",title:"Manual issue slips reconciled from memory",desc:"When material is issued against a manual slip, the Store Executive relies on memory to follow up and create the matching High-rise record; if missed, material reconciliation becomes difficult and stock figures drift."},
+  {sop:"SD-01",cat:"Process Logic",title:"No proactive material-readiness check",desc:"Stores does not proactively compare upcoming execution demand against available stock and inbound POs, so shortages of critical materials surface only when the execution team requests issue."},
+  {sop:"SD-01",cat:"Coordination",title:"Scrap-sale trigger is subjective",desc:"Scrap sale is initiated by the Project Manager's judgment on accumulated inventory with no defined threshold or schedule, leading to inconsistent scrap clearance and idle yard space."}
 ];
 
 const AGENTS = [
@@ -2718,6 +3245,216 @@ const AGENTS = [
     ],
     integrations:["m-Cube / Ozonetel (call logs, duration, timestamps, recording access)","Zoho CRM (lead status, deal conversion, notes, objection fields)","WhatsApp Business API (customer communication monitoring via Agent 2)"],
     metrics:["Team lead-to-deal conversion rate (weekly trend)","% leads with first call within 2 hours of assignment","Average calls-to-deal per RM","% leads with complete objection/feedback notes in CRM","Coaching sessions triggered by agent vs. total coaching sessions"]
+  },
+  {
+    id:21,name:"Accounts Payable Invoice & Payment Run",dept:"Accounts",sop:"AC-02",phase:6,
+    objective:"Automate verification, booking and a disciplined payment run for material, contractor, payroll and service invoices — replacing the current ad-hoc, manually-prioritised release process with a rule-driven, fund-aware workflow.",
+    trigger:"Invoice booked in High-rise (material/contractor/service); HR payroll statement uploaded; Scheduled weekly payment-run window",
+    inputs:[
+      {item:"Invoice + supporting docs (PO, GRN, challan, quality report, debit note)",source:"High-rise / Stores / Purchase"},
+      {item:"Contractor invoice vs work-completion marking",source:"High-rise (Contractor Billing)"},
+      {item:"Payment terms & due date per vendor",source:"High-rise"},
+      {item:"Available funds / fund-constraint flag",source:"HOD-Accounts / Treasury (Agent 24)"},
+      {item:"Payroll statement (RBD-FOR-AC-01) + TDS",source:"HR Team"},
+      {item:"HOD-approved expense vouchers & no-WO invoices",source:"Department HODs"}
+    ],
+    workflow:[
+      {step:1,title:"Invoice Intake & 3-way Match",detail:"On booking, auto 3-way match (PO ↔ GRN ↔ invoice) for material; for contractors match invoice to work completion in High-rise. Flags quantity/rate/tax/retention mismatches to the Billing Team before they reach Approval."},
+      {step:2,title:"Priority Scoring",detail:"Scores each approved invoice by ageing, payment terms, criticality and value into a ranked payable queue — removing manual, subjective prioritisation. Surfaces the queue for HOD-Accounts / Top Management sign-off."},
+      {step:3,title:"Fund-aware Payment Run",detail:"Proposes a fixed weekly payment run sized to available funds (from Agent 24). Holds low-priority items when a fund constraint is flagged and logs why each invoice was paid or deferred."},
+      {step:4,title:"Payroll & TDS Cut-off Guard",detail:"From the 1st, tracks payroll receipt; alerts HR if the statement is not in by the 4th (needed to release salary and pay TDS by the 7th). Verifies TDS per employee and assembles the salary release batch."},
+      {step:5,title:"Compliance Cut-off Enforcement",detail:"Flags any bill not booked by the 4th that would breach the 7th TDS/compliance deadline, and prepares the F&F batch within the 45-day window for exiting employees."},
+      {step:6,title:"Payment Confirmation & Audit Log",detail:"On release, records vendor, amount, approval chain and value date; maintains a full audit trail and a weekly 'Payables & Ageing' report for HOD-Accounts."}
+    ],
+    escalation:[
+      {condition:"3-way match fails",action:"Block booking + alert Billing Team"},
+      {condition:"Payroll statement not received by 4th",action:"Alert HR + HOD-Accounts (salary/TDS risk)"},
+      {condition:"Bill unbooked by 4th but TDS-relevant",action:"Flag compliance risk to HOD-Accounts"},
+      {condition:"Payment demanded outside fixed run",action:"Require HOD-Accounts override with reason"},
+      {condition:"F&F nearing 45-day limit",action:"Escalate to HOD-Accounts + HR"}
+    ],
+    integrations:["High-rise ERP (invoices, PO/GRN, work completion, payment release)","Treasury Monitor (Agent 24) for fund availability","Email (remittance advice, foreign-remittance docs)","WhatsApp Business API (vendor payment intimation)"],
+    metrics:["% invoices auto-matched without manual touch","Average days: invoice booking to payment","% salary releases on/before 7th","% bills booked by 4th-of-month cut-off","Payments made outside fixed run (declining trend)"]
+  },
+  {
+    id:22,name:"Receivables Reconciliation & Financial Closure",dept:"Accounts",sop:"AC-01",phase:6,
+    objective:"Automatically trace incoming receipts to the right customer, reconcile against the twice-daily bank statement, and confirm financial closure before key handover — cutting manual investigation of untraced bank and loan receipts.",
+    trigger:"Bank statement received (twice daily); Booking/milestone receipt entry on High-rise; Possession approaching for a unit",
+    inputs:[
+      {item:"Twice-daily bank statement (incl. pass-through account)",source:"Bank / Accounts"},
+      {item:"Booking & milestone receipt entries (UTR/reference)",source:"High-rise / Sales / CRM"},
+      {item:"Customer outstanding & payment plan",source:"High-rise"},
+      {item:"Virtual account mapping (where used)",source:"High-rise"},
+      {item:"Expected possession date per unit",source:"CRM / Planning"},
+      {item:"Cancellation + refund voucher",source:"CRM"}
+    ],
+    workflow:[
+      {step:1,title:"Auto-match Receipts",detail:"Matches each bank credit to a customer using virtual-account mapping, UTR/reference and amount. Auto-marks matched receipts on High-rise and routes only genuinely untraced credits (typically direct bank/loan) to CRM with a pre-filled investigation card."},
+      {step:2,title:"Untraced-receipt Investigation",detail:"For unmatched credits, compiles sender-bank details and likely-customer candidates to speed CRM tracing, and nudges before the 3rd-of-month reconciliation cut-off so nothing slips past."},
+      {step:3,title:"Virtual-account Nudge",detail:"Identifies customers/transactions still using non-virtual routes and flags them, supporting a push to mandate virtual accounts for cleaner traceability."},
+      {step:4,title:"Pre-possession Reconciliation",detail:"One month before possession, auto-generates the customer reconciliation statement of outstanding amount and routes it for dispatch, ensuring no minor dues are missed."},
+      {step:5,title:"Financial Closure Confirmation",detail:"When the full due amount is received, raises a financial-closure confirmation to CRM — the gate that allows key handover — and logs the handover-approval TAT."},
+      {step:6,title:"Refund & Special Receivables Tracking",detail:"On cancellation, checks past receipts and computes deductions for refund; tracks land-transaction tranches, scrap invoices and inter-site transfer receivables to closure."}
+    ],
+    escalation:[
+      {condition:"Receipt untraced near 3rd-of-month cut-off",action:"Escalate to CRM + HOD-Accounts"},
+      {condition:"Outstanding unpaid one month before possession",action:"Alert CRM + Collections (Agent 1)"},
+      {condition:"Closure requested but balance > 0",action:"Block closure + notify CRM"},
+      {condition:"Refund pending beyond agreement timeframe",action:"Escalate to HOD-Accounts (compliance)"},
+      {condition:"Land/scrap tranche overdue",action:"Flag to Accounts + Management"}
+    ],
+    integrations:["High-rise ERP (receipts, customer ledgers, closure flag)","Bank statement feed / virtual accounts","Collections Automation (Agent 1) for closure linkage","WhatsApp Business API + Email (reconciliation statements)"],
+    metrics:["% receipts auto-matched without manual tracing","Average days to reconcile direct bank/loan receipts","% closures confirmed before key handover","Handover customer-approval TAT (target: 20 min)","Mismatch cases between marked and actual receipt (target: 0)"]
+  },
+  {
+    id:23,name:"Statutory Compliance Calendar (GST / TDS / RERA)",dept:"Accounts",sop:"AC-03",phase:6,
+    objective:"Drive 100% on-time statutory compliance by running a single calendar that schedules, reminds, and tracks every GST, TDS/TCS, RERA, ROC and income-tax obligation with documentation status and consultant sign-off.",
+    trigger:"Calendar date approaching a statutory due date; New project requiring RERA registration; Plan change / time-extension; Assessment notice received",
+    inputs:[
+      {item:"GSTR1/2B/3B and annual return data",source:"High-rise"},
+      {item:"Monthly TDS/TCS reports + salary TDS",source:"High-rise / HR"},
+      {item:"RERA document checklist & certificates",source:"Internal teams / RERA consultant"},
+      {item:"Occupancy Certificate",source:"Legal Team"},
+      {item:"Consultant review/approval status",source:"External tax / RERA consultant"},
+      {item:"Assessment notices",source:"Tax / statutory authorities"}
+    ],
+    workflow:[
+      {step:1,title:"Master Compliance Calendar",detail:"Maintains every recurring deadline — GSTR1 (11/13), GSTR2B (14), GSTR3B (20/22), annual (31 Dec), TDS/TCS pay (7/15) and filing, RERA quarterly/annual — and assigns an owner per task."},
+      {step:2,title:"Tiered Reminders",detail:"Fires escalating reminders (T-5, T-2, T-0) to the task owner and HOD-Accounts; for salary TDS, pulls HR data forward by alerting if inputs are not in well before the 7th."},
+      {step:3,title:"Document Compilation Tracker",detail:"For RERA registration and quarterly/annual filings, runs a live checklist of certificates pending vs received from each internal team, with a single status board for the SPOC."},
+      {step:4,title:"Filing & Payment Confirmation",detail:"Records consultant review sign-off and the actual filing/payment reference for each obligation; flags any return filed without the required consultant approval."},
+      {step:5,title:"RERA Lifecycle Management",detail:"Handles registration, change/time-extension resubmissions (with Top Management sign-off) and closure on Occupancy Certificate — tracking each RERA project to 'completed'."},
+      {step:6,title:"Assessment-Notice Workflow",detail:"On a notice, opens a tracked case routing direct/indirect tax to HOD-Accounts and PF/PT/ESIC to HOD-HR, attaching prior-case response templates and a due date."}
+    ],
+    escalation:[
+      {condition:"Any task at T-2 without inputs ready",action:"Escalate owner → HOD-Accounts"},
+      {condition:"Salary TDS data not in before 7th window",action:"Alert HR + HOD-Accounts"},
+      {condition:"Return about to file without consultant sign-off",action:"Block + notify HOD-Accounts"},
+      {condition:"RERA certificate pending near filing date",action:"Escalate to internal team owner + SPOC"},
+      {condition:"Assessment notice nearing response deadline",action:"Escalate to HOD-Accounts / HOD-HR"}
+    ],
+    integrations:["High-rise ERP (GST/TDS/TCS report generation)","RERA / GST / Income-Tax / ROC portals (status, filing references)","Consultant coordination (email)","WhatsApp Business API + Email (deadline reminders)"],
+    metrics:["Days delay in submission of compliances (target: 0)","% obligations filed with consultant sign-off","% RERA documents compiled before filing date","Salary-TDS data received before cut-off (% on time)","Assessment notices answered within deadline"]
+  },
+  {
+    id:24,name:"Treasury Cashflow & Covenant Monitor",dept:"Accounts",sop:"AC-04",phase:6,
+    objective:"Give Top Management a live treasury view — rolling cashflow, deficit/surplus alerts, debt-covenant tracking and loan-drawdown status — instead of a once-a-month statement, splitting operations funding from growth-capital funding.",
+    trigger:"Daily/weekly cashflow refresh; Projected deficit within the look-ahead window; Loan milestone / drawdown / repayment due; Covenant test date",
+    inputs:[
+      {item:"Departmental expense projections (annual plan, QoQ/MoM)",source:"Procurement, Liaisoning, Ops, Sales, Collections"},
+      {item:"Receipts forecast",source:"Receivables (Agent 22) / Collections (Agent 1)"},
+      {item:"Payables run forecast",source:"Payables (Agent 21)"},
+      {item:"Loan term sheets (tranche milestones, repayment, covenants)",source:"Bankers / High-rise"},
+      {item:"Current debt position & interest schedule",source:"Accounts"},
+      {item:"Land-acquisition business plan",source:"Liaisoning Team"}
+    ],
+    workflow:[
+      {step:1,title:"Two-leg Cashflow Model",detail:"Maintains separate flows for current operations and growth capital (land), producing the Company Cashflow Statement (RBD-FOR-AC-02) with a rolling 3-month look-ahead refreshed daily/weekly rather than monthly."},
+      {step:2,title:"Deficit & Surplus Alerts",detail:"Flags projected deficits early with options (inter-company transfer vs short-term loan/OD/CC) for Top Management decision, and flags surplus cash for deployment per a defined policy."},
+      {step:3,title:"Covenant & Leverage Tracking",detail:"Tracks debt-to-net-worth / debt-equity against an agreed ceiling and monitors bank covenants, current and panel interest, and timely submission of details to banks."},
+      {step:4,title:"Drawdown & Repayment Scheduler",detail:"Tracks loan tranche-release milestones, repayment dates and compliance documentation per term sheet; alerts ahead of each drawdown approval and repayment."},
+      {step:5,title:"Project Funding Support",detail:"Compiles financial inputs into the Liaisoning land business plan and prepares the banker comparison to support Top Management's funding-source decision."},
+      {step:6,title:"Debt-position Reporting",detail:"Produces a periodic debt-status and covenant report for Management, and tracks removal of debt from MCA/RERA portals and release/top-up of security."}
+    ],
+    escalation:[
+      {condition:"Projected deficit within look-ahead",action:"Alert HOD-Accounts + Top Management with options"},
+      {condition:"Leverage nearing agreed ceiling",action:"Escalate to Top Management"},
+      {condition:"Covenant breach risk / bank submission due",action:"Alert HOD-Accounts"},
+      {condition:"Drawdown or repayment date approaching",action:"Notify Accounts + Management for approval"},
+      {condition:"Surplus cash idle beyond policy",action:"Flag for deployment decision"}
+    ],
+    integrations:["High-rise ERP (expenses, receipts, debt schedule)","Payables (Agent 21) + Receivables (Agent 22) forecasts","Banking / treasury portals (drawdowns, covenants)","Email (cashflow statement, debt-position report)"],
+    metrics:["Days delay in payment of salary, partners and vendors (target: 0)","Forecast vs actual cashflow variance","Covenant tests passed on time (%)","Drawdowns/repayments actioned before due date (%)","Surplus cash deployed per policy (%)"]
+  },
+  {
+    id:25,name:"Digital Campaign Lead & Spend Optimizer",dept:"Marketing",sop:"MKTG-02",phase:7,
+    objective:"Consolidate channel-wise spend, leads, CPL and impressions into one live dashboard with automated budget-pacing alerts and microsite lead-capture integrity checks — replacing manual tracker compilation.",
+    trigger:"Daily ad-platform data refresh; Microsite enquiry-form submission; Budget-pacing threshold crossed; Daily/weekly/monthly reporting window",
+    inputs:[
+      {item:"Channel spend, impressions, clicks, leads",source:"Google Ads / Meta Ads"},
+      {item:"Approved digital budget per channel",source:"HOD-DM / Top Management"},
+      {item:"Microsite enquiry submissions",source:"Project microsite"},
+      {item:"Lead records & status",source:"Zoho CRM"},
+      {item:"Cost-per-lead targets",source:"HOD-MKTG (as agreed)"},
+      {item:"Spend template / benchmarks",source:"Digital Marketing"}
+    ],
+    workflow:[
+      {step:1,title:"Unified Performance Dashboard",detail:"Pulls daily data from Google and Meta into one view — leads, CPL, impressions, views and spend per channel and project — eliminating manual tracker compilation (RBD-FOR-MKTG-01)."},
+      {step:2,title:"Microsite Capture Integrity",detail:"Reconciles enquiry-form submissions against Zoho CRM records to detect dropped, duplicated or malformed leads, ensuring channel performance is not understated."},
+      {step:3,title:"Budget-pacing Alerts",detail:"Monitors each channel against its approved budget and CPL target; alerts HOD-DM when a channel over- or under-paces or breaches CPL, with a recommended reallocation."},
+      {step:4,title:"Lead-quality Feedback Loop",detail:"Joins channel attribution with downstream site-visit and conversion outcomes to score lead quality per channel, informing where to scale or cut spend."},
+      {step:5,title:"Spend-analysis Circulation",detail:"Auto-prepares the actual-spend analysis for HOD-MKTG inputs and the daily/weekly/monthly lead & spend reports for Top Management."},
+      {step:6,title:"Early-adoption Watch",detail:"Surfaces new platform features/formats from Google/Meta updates so Digital Marketing can adopt early and retain a competitive edge."}
+    ],
+    escalation:[
+      {condition:"Channel CPL breaches target",action:"Alert HOD-DM with reallocation suggestion"},
+      {condition:"Microsite leads not landing in CRM",action:"Flag IT + HOD-DM (capture failure)"},
+      {condition:"Channel spend pacing >120% / <60%",action:"Alert HOD-DM"},
+      {condition:"Lead quality from a channel collapses",action:"Recommend pause to HOD-MKTG"},
+      {condition:"Daily report data missing",action:"Notify DM Team"}
+    ],
+    integrations:["Google Ads & Meta Ads APIs (spend, leads, impressions)","Zoho CRM (lead capture, status, conversion)","Project microsite (enquiry forms)","Email / dashboard (spend analysis, reports)"],
+    metrics:["Number of leads per channel vs agreed","Cost per lead per channel vs agreed","Impressions / views vs agreed","% microsite leads correctly captured in CRM","Manual tracker hours saved per month"]
+  },
+  {
+    id:26,name:"Marketing Communication & WhatsApp Orchestrator",dept:"Marketing",sop:"MKTG-03",phase:7,
+    objective:"Plan, approve, schedule and track bucket-wise WhatsApp communication and campaign-spend tagging end-to-end — reducing last-minute content planning and untracked Verloop/Meta approvals.",
+    trigger:"Month-end communication-calendar build; Weekly detailed-content planning; Campaign vendor invoice received; Fortnightly channel review",
+    inputs:[
+      {item:"Customer segmentation / buckets",source:"Zoho CRM"},
+      {item:"Communication calendar (RBD-FOR-MKTG-04)",source:"MKTG Coordinator"},
+      {item:"Project sales-team feedback",source:"Project Sales Team / MKTG PM"},
+      {item:"Channel-partner content list",source:"Marketing"},
+      {item:"Vendor invoices for campaign implementation",source:"Campaign vendors"},
+      {item:"Zoho campaign performance report",source:"Zoho CRM"}
+    ],
+    workflow:[
+      {step:1,title:"Calendar Build & Content Nudge",detail:"At month-end, assembles next month's bucket-wise topic calendar and then prompts for detailed weekly content (text + media) early, reducing the current one-to-two-week last-minute planning gap."},
+      {step:2,title:"Content Assembly",detail:"Elaborates broad topics (e.g. Plus Homes → ventilation, landscaping, illumination, open spaces) into per-bucket copy and assembles the channel-partner content sheet."},
+      {step:3,title:"Approval & Scheduling Tracking",detail:"Submits messages to the WhatsApp-bot vendor (Verloop/Meta) and tracks approval status and scheduled send per bucket, alerting on rejection or send failure."},
+      {step:4,title:"Spend-tag Invoice Routing",detail:"Auto-tags campaign vendor invoices with expense tags, routes them for HOD-Sales approval, and forwards approved ones to Finance — replacing manual handling."},
+      {step:5,title:"Channel Performance Review",detail:"Combines Zoho campaign reports with structured on-site sales feedback to score channel effectiveness, surfacing proposed channel/campaign changes for the fortnightly HOD-MKTG review."},
+      {step:6,title:"Activation Sync",detail:"Confirms offline (Zoho) and digital channel activation status so no planned campaign is left un-launched at project launch."}
+    ],
+    escalation:[
+      {condition:"Detailed content not ready ahead of send window",action:"Alert MKTG Coordinator"},
+      {condition:"WhatsApp message rejected by Meta/Verloop",action:"Flag Automation Executive"},
+      {condition:"Vendor invoice unapproved beyond SLA",action:"Escalate to HOD-Sales"},
+      {condition:"Channel underperforming vs target",action:"Surface to HOD-MKTG for fortnightly review"},
+      {condition:"Planned campaign not activated",action:"Alert MKTG PM"}
+    ],
+    integrations:["Zoho CRM (segmentation, campaign performance)","WhatsApp-bot vendor (Verloop) + Meta approval","WhatsApp Business API (bucket-wise sends)","Finance system (tagged invoice submission)"],
+    metrics:["Number of leads generated vs target","% content ready before scheduled send window","% WhatsApp messages approved first-pass","Invoice approval turnaround time","Channel changes actioned per fortnightly review"]
+  },
+  {
+    id:27,name:"Store Material Readiness & PO Foreclosure",dept:"Stores",sop:"SD-01",phase:7,
+    objective:"Keep the execution team supplied on time by proactively matching upcoming demand to stock and inbound POs, auto-flagging overdue PO lines for foreclosure, and closing the manual-issue-slip reconciliation gap.",
+    trigger:"PO raised / due delivery date; Goods receipt on site; Material issue request (ERP or manual slip); PO line unfulfilled 8+ days; Scrap accumulation",
+    inputs:[
+      {item:"Open POs with expected delivery dates",source:"High-rise / Purchase"},
+      {item:"Current stock by rack location",source:"High-rise (Stores)"},
+      {item:"Upcoming execution demand / issue forecast",source:"Planning (DPR) / Project Engineer"},
+      {item:"Goods receipt & quality-inspection status",source:"High-rise / Quality Engineer"},
+      {item:"Material issue slips (ERP + manual)",source:"Project Planning Engineer / Project Engineer"},
+      {item:"Scrap inventory level",source:"Project Manager / Stores"}
+    ],
+    workflow:[
+      {step:1,title:"Material-readiness Forecast",detail:"Compares upcoming execution demand against current stock and inbound POs to flag likely shortfalls of critical materials days in advance, so follow-up happens before work is blocked."},
+      {step:2,title:"Vendor Delivery Follow-up",detail:"For critical materials, prompts the Store Executive to follow up with vendors using PO delivery dates and escalates to HOD-Stores / Purchase when delivery slips."},
+      {step:3,title:"Goods Receipt & Quality Gate",detail:"On arrival, ensures the quality-inspection step is invoked for specified materials before acceptance and that the GRN is recorded against PO line items on High-rise; tracks rejected-stock quarantine and return."},
+      {step:4,title:"Auto PO-line Foreclosure",detail:"Detects PO line items unfulfilled for 8+ days despite follow-up and auto-flags them for foreclosure on High-rise, notifying vendor and Purchase — removing reliance on the Executive's memory."},
+      {step:5,title:"Manual-slip Reconciliation Guard",detail:"Tracks every manual material issue and continuously nudges the Project Planning Engineer to create the matching High-rise record, closing the reconciliation gap that otherwise distorts stock."},
+      {step:6,title:"Scrap Threshold Trigger",detail:"Monitors scrap accumulation against a defined threshold and prompts HOD-Stores to verify and initiate competitive scrap sale, keeping Management informed."}
+    ],
+    escalation:[
+      {condition:"Forecast shortfall on critical material",action:"Alert Store Executive + Purchase"},
+      {condition:"Vendor delivery slipping",action:"Escalate to HOD-Stores / Purchase"},
+      {condition:"PO line unfulfilled 8+ days",action:"Auto-flag foreclosure + notify Purchase"},
+      {condition:"Manual issue slip unreconciled",action:"Repeated nudge → escalate to Planning Engineer"},
+      {condition:"Scrap above threshold",action:"Prompt HOD-Stores for sale"}
+    ],
+    integrations:["High-rise ERP (POs, GRN, stock, issue records, foreclosure)","Planning DPR (demand/issue forecast)","Quality App / Quality Engineer (inspection status)","WhatsApp Business API (vendor follow-up, shortfall alerts)"],
+    metrics:["Average delay in material issue affecting progress (target: 0 hrs)","% critical-material shortfalls flagged before stoppage","% overdue PO lines auto-foreclosed on time","% manual issue slips reconciled to High-rise","Scrap cleared within threshold cycle"]
   }
 ];
 
@@ -2726,14 +3463,16 @@ const PHASES = [
   {num:2,title:"Revenue",time:"Month 2–3",color:"#f59e0b",agents:[2,3,4,14]},
   {num:3,title:"Operations",time:"Month 3–4",color:"#3b82f6",agents:[7,8,9,10]},
   {num:4,title:"Customer Journey",time:"Month 4–5",color:"#8b5cf6",agents:[15,16,17,19]},
-  {num:5,title:"Governance",time:"Month 5–6",color:"#059669",agents:[12,13,18,20]}
+  {num:5,title:"Governance",time:"Month 5–6",color:"#059669",agents:[12,13,18,20]},
+  {num:6,title:"Finance Automation",time:"Month 6–7",color:"#0891b2",agents:[21,22,23,24]},
+  {num:7,title:"Marketing & Stores",time:"Month 7–8",color:"#e11d48",agents:[25,26,27]}
 ];
 
 const DEPT_COLORS = {
   "Planning":"#3b82f6","CRM":"#8b5cf6","Sales":"#d97706","Pre-Sales":"#ea580c",
   "Contracts":"#0d9488","CBD":"#0d9488","Execution":"#4f46e5","Safety":"#dc2626",
   "Quality":"#059669","Design":"#db2777","Estimation":"#65a30d","FM":"#78716c",
-  "Channel Sales":"#7c3aed"
+  "Channel Sales":"#7c3aed","Accounts":"#0891b2","Marketing":"#e11d48","Stores":"#b45309"
 };
 
 // ─── RENDER ──────────────────────────────────────────────────────────────────
