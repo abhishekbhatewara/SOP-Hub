@@ -97,7 +97,9 @@ ${JSON.stringify({
   kpis: sopData.kpis,
   opportunities: sopData.opportunities,
   gaps: sopData.gaps,
-  agents: sopData.agents
+  agents: sopData.agents,
+  audit: sopData.audit,
+  formats: sopData.formats
 }, null, 2)}
 
 Team brainstorm suggestion: "${suggestion}"
@@ -111,7 +113,9 @@ Analyse the suggestion and return ONLY the fields that need to change. Use this 
     "kpis": ["full updated array — include ONLY if KPIs change"],
     "opportunities": ["full updated array of strings — include ONLY if they change"],
     "gaps": [{"cat": "Process Logic | Control / Compliance | Data / Integration | Coordination", "title": "short gap name", "desc": "one or two sentences explaining the gap"}],
-    "agents": [{"id": 0, "name": "agent name", "objective": "what the agent automates"}]
+    "agents": [{"id": 0, "name": "agent name", "objective": "what the agent automates"}],
+    "audit": [{"sop": "SOP id", "ref": "A-01", "tier": 1, "title": "control name", "clause": "the SOP sentence this control tests, quoted", "risk": "what goes wrong if it fails", "test": ["step one", "step two"], "evidence": "records to obtain", "sample": "how many and chosen how", "freq": "how often"}],
+    "formats": [{"sop": "SOP id", "no": "RBD-FOR-XX-01 or Unregistered", "name": "record name", "status": "amend | build | unregistered", "freq": "", "prepared": "", "approved": "", "dist": "", "why": "why this record exists and what changed", "sections": [{"sec": "section name", "fields": "comma separated fields", "source": "where the data comes from"}]}]
   }
 }
 
@@ -125,6 +129,19 @@ Rules:
 - For "agents", return the FULL updated list attached to this SOP. Keep the existing
   numeric "id" for agents that already exist; use id 0 only for a brand-new agent idea.
   Only "name" and "objective" are editable here.
+- For "audit", return the FULL updated control list for this SOP. "tier" MUST be 1-5 where
+  1 = statutory or cash exposure, 2 = baseline integrity, 3 = early-warning loop,
+  4 = reporting integrity, 5 = document control. Rank by consequence of failure and by
+  whether the process can detect its own failure: a control with no KPI behind it is
+  invisible until something breaks downstream, so it needs audit more, not less.
+  "ref" must be unique within the SOP. Quote "clause" verbatim from the SOP text.
+  Every control needs at least one "test" step, and a sample that says how many and chosen how.
+- For "formats", return the FULL updated record list for this SOP. "status" MUST be exactly
+  "amend" (the format exists and needs changes), "build" (registered in the SOP's Formats
+  list but no template exists) or "unregistered" (the process requires the record but no
+  Formats list registers it). In "fields", wrap any field that is new or changed in
+  *asterisks* so it renders highlighted. Every "sections" row needs a real "source" — where
+  the figure actually comes from.
 - Do not invent changes not implied by the suggestion`;
 
   try {

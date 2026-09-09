@@ -303,6 +303,8 @@ tr:hover td{background:#fafbfc}
     <div class="sidebar-section-label">Support Tools</div>
     <div class="nav-item" onclick="showView('gaps')"><span class="icon">🔍</span> Gap Analysis</div>
     <div class="nav-item" onclick="showView('agents')"><span class="icon">🤖</span> Agent Library</div>
+    <div class="nav-item" onclick="showView('audit')"><span class="icon">🛡️</span> Audit Programme</div>
+    <div class="nav-item" onclick="showView('formats')"><span class="icon">📄</span> Format Library</div>
   </div>
   <div class="sidebar-section">
     <div class="sidebar-section-label">Overview</div>
@@ -421,6 +423,40 @@ tr:hover td{background:#fafbfc}
   <div class="search-bar"><span class="search-icon">🔍</span><input type="text" placeholder="Search agents by name, department, or SOP..." oninput="filterAgents(this.value)"></div>
   <div class="filter-row" id="dept-filters"></div>
   <div id="agent-grid"></div>
+</div>
+
+<!-- AUDIT PROGRAMME -->
+<div id="view-audit" class="view">
+  <h2>Audit Programme</h2>
+  <p class="subtitle">Controls derived from the SOPs, ranked by consequence of failure — what to test, on what evidence, at what sample</p>
+  <div class="search-bar"><span class="search-icon">🔍</span><input type="text" placeholder="Search controls by title, risk or clause..." oninput="auditSearch=this.value;buildAudit()"></div>
+  <div style="margin-bottom:8px">
+    <div style="font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Tier</div>
+    <div class="filter-row" id="audit-tier-filters"></div>
+  </div>
+  <div style="margin-bottom:16px">
+    <div style="font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Department</div>
+    <div class="filter-row" id="audit-dept-filters"></div>
+  </div>
+  <div id="audit-results" style="font-size:12px;color:#94a3b8;margin-bottom:10px"></div>
+  <div id="audit-content"></div>
+</div>
+
+<!-- FORMAT LIBRARY -->
+<div id="view-formats" class="view">
+  <h2>Report Format Library</h2>
+  <p class="subtitle">Every record the SOPs require — sections, fields, and the source of each figure</p>
+  <div class="search-bar"><span class="search-icon">🔍</span><input type="text" placeholder="Search formats by name, number or field..." oninput="formatsSearch=this.value;buildFormats()"></div>
+  <div style="margin-bottom:8px">
+    <div style="font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Status</div>
+    <div class="filter-row" id="fmt-status-filters"></div>
+  </div>
+  <div style="margin-bottom:16px">
+    <div style="font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Department</div>
+    <div class="filter-row" id="fmt-dept-filters"></div>
+  </div>
+  <div id="fmt-results" style="font-size:12px;color:#94a3b8;margin-bottom:10px"></div>
+  <div id="fmt-content"></div>
 </div>
 
 <!-- AGENT DETAIL (dynamic) -->
@@ -14875,6 +14911,352 @@ const PHASES = [
   {num:8,title:"Procurement & Approvals",time:"Month 8–9",color:"#0369a1",agents:[28,29]}
 ];
 
+// ─── AUDIT PROGRAMME (per SOP) ───────────────────────────────────────────────
+const AUDIT_TIERS = {
+  1:{name:"Statutory & cash exposure", color:"#a3231f"},
+  2:{name:"Baseline integrity",        color:"#8f5b07"},
+  3:{name:"Early-warning loop",        color:"#2f6486"},
+  4:{name:"Reporting integrity",       color:"#55507a"},
+  5:{name:"Document control",          color:"#0f766e"}
+};
+
+const AUDIT = [
+  {sop:"PL-01", ref:"A-01", tier:1, title:"RERA schedule derivation and upload",
+   clause:"HO-Planning shall also prepare the RERA schedule (for the entire project as well as each phase) based on the approved master schedule and share it with GM-Projects for approval. HO Planning shall send the approved RERA schedule to HOD-Finance for upload to the RERA website.",
+   risk:"The declared completion date is the only public, statutory commitment in either SOP, carrying penalty and buyer-compensation exposure. Neither SOP contains a step that revisits it after upload, so drift between the declared date and the real forecast stays invisible until the date is breached.",
+   test:["Trace each uploaded date back to the approved master schedule it was derived from.",
+         "Confirm GM-Projects approval is on record and predates the upload.",
+         "Compare the declared date against the current forecast and list every project or phase where the forecast has already passed it."],
+   evidence:"RERA portal extract; approved RERA schedule; GM-Projects approval; current forecast from the MPR",
+   sample:"All registered projects and phases", freq:"Quarterly", noSelfCheck:true},
+
+  {sop:"PL-02", ref:"A-02", tier:1, title:"Billing milestone confirmation to CRM",
+   clause:"HO Planning shall also confirm achievement of billing milestones to the CRM Team, so that customer demands under RBD-SOP-CRM-05 are raised in line with actual construction progress.",
+   risk:"Planning's confirmation is what triggers a demand on a customer. Confirming a milestone not physically achieved raises a demand the company is not entitled to, and the reversal is a customer-facing and regulatory event. Under-confirming silently delays collections and distorts the cash forecast.",
+   test:["Verify each sampled confirmation against physical progress evidence and the QC record for that milestone.",
+         "Agree the confirmation to the demand actually raised in High-rise.",
+         "Test the converse: identify any demand raised without a Planning confirmation on file, or raised ahead of it."],
+   evidence:"Finishing Format emails; QC records; High-rise demand register",
+   sample:"25 milestones weighted to finishing-stage projects; plus 100% of demands with no matching confirmation",
+   freq:"Quarterly"},
+
+  {sop:"PL-02", ref:"A-03", tier:1, title:"Progress verified against progress certified for payment",
+   clause:"Before a period position is declared, HO Planning shall verify a sample of claimed progress against what physically exists on site, and shall report any divergence between physical progress and progress certified for payment.",
+   risk:"The largest misstatement surface in the process. Certified progress drives contractor payment, the work-done curve and the earned-value position, and all three inherit any overstatement without independent challenge.",
+   test:["Re-perform the verification on an independent sample of activities, selected by value.",
+         "Compare Planning's declared period position against the quantities certified by CBD for the same period.",
+         "Confirm the divergence report was actually produced and issued, rather than nominally required."],
+   evidence:"DPR progress entries; Planning verification working papers; CBD certified quantities; divergence report",
+   sample:"2 projects x 15 activities, selected by value", freq:"Quarterly, at period close",
+   interfaces:"CBD-01"},
+
+  {sop:"PL-01", ref:"B-01", tier:2, title:"R0 lock and schedule revision control",
+   clause:"Once locked, R0 shall not be altered; any change to a baseline date requires an approved schedule revision, and R0 shall be retained as the reference against which all delay is measured. The baseline shall be re-looked once in each financial year; any revision sought outside that annual window requires Management approval with the reason recorded.",
+   risk:"This single clause carries every downstream number. It has no measure attached and no schedule revision register in the Formats list, so an unapproved change to R0 leaves no artefact behind and quietly corrects the delay history instead of explaining it.",
+   test:["Retrieve R0 as originally issued and diff it against the schedule currently in use.",
+         "Confirm every difference is supported by an approved revision with a recorded reason.",
+         "Confirm the annual re-look fell inside its window, and any out-of-window revision carries Management approval.",
+         "Confirm the scheduling tool holds R0, the current forecast and any approved revised baseline as three separately retrievable positions."],
+   evidence:"R0 as issued; current schedule file; approved revisions; Management approvals",
+   sample:"All active projects", freq:"Half-yearly, and on any re-baselining", noSelfCheck:true},
+
+  {sop:"PL-02", ref:"B-02", tier:2, title:"Planned dates in the DPR are editable",
+   clause:"Planned Dates in the DPR seem to be editable (not fixed). It is recommended that planned dates should remain fixed.",
+   risk:"An admitted weakness in the system of record, written into the SOP by its own authors. If the planned date can be edited, delay against plan can be erased at source, and every measurement built on it becomes unreliable without any of them showing an error.",
+   test:["Inspect the DPR for edit permissions on the planned-date field, and identify who holds them.",
+         "Select activities per project and compare the recorded planned date across successive DPRs over three months.",
+         "Investigate every change found, and confirm whether an approved schedule revision exists behind it."],
+   evidence:"DPR files across the period; system permission settings; change log if one exists",
+   sample:"5 activities per project x 3 months of DPRs",
+   freq:"Every cycle until the field is locked, then annually", noSelfCheck:true},
+
+  {sop:"PL-01", ref:"B-03", tier:2, title:"Cross-function acceptance before the baseline is locked",
+   clause:"Before the baseline is locked, HO Planning shall obtain acceptance of the schedule from every contributing function, so that the dates are owned by the functions that must deliver them and not by Planning alone.",
+   risk:"Without a recorded acceptance the dates belong to Planning alone, and the functions expected to deliver them can disown them at the first delay review, which is precisely where delay analysis becomes contested and stops producing agreed causes.",
+   test:["For each baseline issued in the period, obtain the acceptance record from every contributing function.",
+         "Confirm each acceptance is dated before the lock date, not backfilled after it.",
+         "Where a function did not accept, confirm what was done about it before the lock."],
+   evidence:"Acceptance records or sign-offs; baseline lock date; distribution record",
+   sample:"All baselines issued in the period", freq:"On each baseline issue"},
+
+  {sop:"PL-02", ref:"C-01", tier:3, title:"Constraint register and long-lead ordering",
+   clause:"The same register shall carry the other constraints that must be cleared for the programme to hold - statutory and authority approvals, materials, plant and subcontracts. HO Planning shall derive each required-by date by working backwards from the schedule against the applicable lead time, record a named owner against every item, and raise a long-lead item for ordering before its latest order date is reached.",
+   risk:"The only preventive control in the whole Planning process; everything else reports delay after it has happened. Its proposed KPI and the make-ready screen that would have fed it were both dropped, so nothing signals a failure here until the activity is already late.",
+   test:["Confirm the register exists and covers all five constraint classes, not drawings alone.",
+         "For each sampled long-lead item, confirm a required-by date derived by backward pass from the schedule, and a named owner.",
+         "Confirm the item was raised before its latest order date, and trace it to the monthly material schedule issued to Purchase and to the actual PO date."],
+   evidence:"Constraint register; material schedule issued to Purchase; PO dates from High-rise",
+   sample:"20 long-lead items across active projects", freq:"Quarterly", noSelfCheck:true},
+
+  {sop:"PL-02", ref:"C-02", tier:3, title:"Hindrance register and the escalation rule",
+   clause:"Hindrances recorded in the Daily Progress Report shall be logged in a hindrance register against a named owner and a target resolution date. A hindrance not closed within two working days shall be escalated to GM-Projects. Resolution shall be recorded in the register rather than settled only in informal channels.",
+   risk:"PL-02 states in its own process description that a lot of issue resolution happens over whatsapp. The register competes with a channel that leaves no auditable record, and it can look clean and current while the issues that actually mattered were handled somewhere else entirely.",
+   test:["Take hindrances recorded in the DPRs and confirm each reaches the register with an owner and a target resolution date.",
+         "Confirm escalation to GM-Projects for every item open beyond the stated period.",
+         "Work the other direction: review a sample of site issue correspondence and identify hindrances that never reached the register at all. This second test is the one that matters."],
+   evidence:"DPR hindrance entries; hindrance register; escalation emails; site issue correspondence",
+   sample:"30 hindrances; plus one month of issue correspondence per project", freq:"Quarterly", noSelfCheck:true},
+
+  {sop:"PL-02", ref:"C-03", tier:3, title:"Delay analysis - timing, sign-off and support",
+   clause:"Every month, HO Planning shall perform a delay analysis for each project and identify key reasons and stakeholders responsible. HO Planning shall get inputs from all HODs and get sign-off from them once the assignable causes are identified, and share the delay analysis for approval by GM-Projects.",
+   risk:"This analysis assigns responsibility between functions and is the record any contested entitlement position would rest on. Late, unsigned or unsupported analysis is worth very little at the point it is actually needed. The SOP names no method, so comparability between months is not guaranteed either.",
+   test:["Confirm the analysis was performed every month, and test timing against the 3-day target in the KPI table.",
+         "Confirm sign-off from each of the four HODs named in the clause, and GM-Projects approval.",
+         "Test whether attributed causes are supported by the contemporaneous record rather than asserted after the fact."],
+   evidence:"Monthly delay analysis; HOD sign-offs; GM-Projects approval; supporting contemporaneous records",
+   sample:"Timing on all projects; full substantive test on 2 projects x 3 months",
+   freq:"Quarterly, covering the three months elapsed"},
+
+  {sop:"PL-02", ref:"C-04", tier:3, title:"Review decisions tracked to closure",
+   clause:"Every decision and action arising from the fortnightly and monthly reviews shall be recorded against a named owner with a committed date, circulated after the meeting, and reported as closed or outstanding at the following review.",
+   risk:"Reviews that generate actions nobody closes become reporting theatre, and the cost is invisible because the meeting still happens on time. The closure measure was proposed and dropped, so nothing reports on this.",
+   test:["Take two consecutive review sets and trace every action from the first to its closure status in the second.",
+         "Confirm circulation actually occurred after each meeting.",
+         "Measure the proportion closed by the committed date, and how often the same action recurs across cycles."],
+   evidence:"Minutes and action tracker for consecutive fortnightly and monthly reviews",
+   sample:"2 consecutive fortnightly and 2 consecutive monthly cycles per project", freq:"Quarterly", noSelfCheck:true},
+
+  {sop:"PL-02", ref:"D-01", tier:4, title:"Reports reconciled to source before issue",
+   clause:"Before any report is issued, HO Planning shall reconcile it to the source records it is drawn from. Reports shall present the major exceptions rather than restating the full dataset, and every major variance shall carry an attributed cause and a named owner.",
+   risk:"Reports that do not tie back to source drive decisions on numbers nobody can reproduce. A restatement after issue costs more than the original error, because it withdraws confidence from every other number in the same pack.",
+   test:["Take one Monthly Progress Report and re-derive its headline figures independently from the DPRs and High-rise.",
+         "Quantify the difference and establish whether a reconciliation was performed before issue.",
+         "Confirm every major variance carries an attributed cause and a named owner; list any restatement issued after publication."],
+   evidence:"MPR as issued; DPRs; High-rise extracts; reconciliation working paper if one exists",
+   sample:"1 MPR per project", freq:"Quarterly"},
+
+  {sop:"PL-01 / PL-02", ref:"D-02", tier:4, title:"Planned versus achieved work done",
+   clause:"Each month HO Planning shall prepare, jointly with the Estimation team, a planned-versus-achieved work done analysis comparing the value of work actually completed against the approved planned work-done curve, and shall report the resulting earned-value position.",
+   risk:"The curve prepared under PL-01 is the only reference against which achieved value is measured. If it was never approved, or the monthly analysis is produced by Planning alone rather than jointly with Estimation, the reported variance is unanchored and the forecast value at completion means nothing.",
+   test:["Confirm the planned work-done curve exists for the project and carries GM-Projects approval.",
+         "Confirm the monthly analysis is genuinely produced jointly with Estimation, not merely circulated to them.",
+         "Recompute cost and schedule variance for one project from source and agree to the figures reported in the MPR."],
+   evidence:"Approved work-done curve; monthly planned-vs-achieved analysis; approved budget; certified value",
+   sample:"2 projects", freq:"Quarterly", interfaces:"EB-02"},
+
+  {sop:"PL-01 / PL-02", ref:"E-01", tier:5, title:"Both Planning SOPs carry the same document number",
+   clause:"PL-01 and PL-02 are both numbered RBD-SOP-PL-R0.",
+   risk:"Neither document can be cited unambiguously - not in a controlled-document register, not in training records, not in an audit finding. The pattern runs through the wider set: all four Accounts SOPs share a number, as do both Design (post) SOPs.",
+   test:["Extract the document number from all 43 SOPs in the set and list every collision.",
+         "Confirm a unique number is assigned before issue."],
+   evidence:"All 43 SOP files; controlled-document register",
+   sample:"All 43 SOPs", freq:"Once, then on issue"},
+
+  {sop:"PL-01 / PL-02", ref:"E-02", tier:5, title:"Neither SOP has been formally released",
+   clause:"The Document Release Authorization table in both files is empty - no name, designation, signature or date against either Prepared by or Approved by.",
+   risk:"Documents are circulating as controlled copies while formally unreleased. Nothing records who authored them, who approved them, or when they took effect, which makes every clause unenforceable in an audit sense and undermines the authority of the whole set.",
+   test:["Inspect the release block of each SOP in the set.",
+         "For any that are blank, establish whether the document is nonetheless in use, and from what date."],
+   evidence:"Release block of each SOP; circulation and training records",
+   sample:"All 43 SOPs", freq:"Before issue", raiseFirst:true},
+
+  {sop:"PL-02", ref:"E-03", tier:5, title:"Three of four formats carry two different numbers",
+   clause:"The process description cites the Fortnightly Review Report as PL-03, the Monthly Progress Report as PL-04 and the Finishing Format as PL-05. The Formats list numbers the same three PL-02, PL-03 and PL-04.",
+   risk:"Anyone retrieving a format by the number quoted in the body pulls the wrong document. Only the Daily Progress Report agrees across both halves.",
+   test:["Reconcile every format citation in the body against the Formats list in both SOPs.",
+         "Confirm which series is authoritative."],
+   evidence:"PL-01 and PL-02 body text; Formats lists; format templates in use",
+   sample:"All format citations, both SOPs", freq:"Once", blocks:"E-04"},
+
+  {sop:"PL-01 / PL-02", ref:"E-04", tier:5, title:"Six required records have no format number",
+   clause:"Project Charter, planned work-done curve, site logistics plan, project resource plan, project risk register and weekly progress report are all registered as RBD-FOR-PL-__.",
+   risk:"Records the process now requires cannot be requested, filed or audited by reference. Two of them - the risk register and the work-done curve - are the evidence base for controls B-01 and D-02.",
+   test:["Confirm a number and an approved template exists for each.",
+         "The Project Charter additionally has no agreed format at all, which is recorded in PL-01 and needs closing separately."],
+   evidence:"Formats lists; template library",
+   sample:"All six entries", freq:"Once, after E-03 is resolved"}
+];
+
+// ─── REPORT FORMAT LIBRARY (per SOP) ─────────────────────────────────────────
+const FORMAT_STATUS = {
+  amend:       {label:"Exists · amend",        color:"#8f5b07"},
+  build:       {label:"Registered · to build", color:"#2c6c50"},
+  unregistered:{label:"Required · unregistered",color:"#a3231f"}
+};
+
+const FORMATS = [
+  {sop:"PL-02", no:"RBD-FOR-PL-01", name:"Daily Progress Report", status:"amend",
+   freq:"Daily", prepared:"Project Planning Engineer", approved:"—",
+   dist:"HODs Projects, D&D, P&M, Purchase; HO Planning; MGMT",
+   why:"The SOP already lists ten content items and they stand. Four amendments close controls the review added: the planned date must stop being editable, hindrances need the fields that let them flow into a register, progress needs the measurement rule that makes it verifiable, and each entry needs a source reference so an auditor can trace it.",
+   sections:[
+    {sec:"Header", fields:"Project, tower/block, date, prepared by, weather, working hours lost", source:"Site"},
+    {sec:"Progress", fields:"Activity, WBS ref, *planned date (locked, read-only)*, quantum of work performed — RCC, finishing, MEP stage, *measurement rule applied*, % complete, *source record reference*", source:"R0 baseline for planned date; site measurement for actual"},
+    {sec:"Slab tracking", fields:"Slab ref, planned date, actual date, duration taken, delay from planned date", source:"Site; planned from R0"},
+    {sec:"Materials", fields:"Material arrived at site, quantity, GRN ref; RMC production for the day", source:"Stores, RMC plant"},
+    {sec:"Hindrances", fields:"Description, activity affected, *owner*, *target resolution date*, *days open*, *escalation flag past the stated period*", source:"Site; feeds the hindrance register"},
+    {sec:"Design", fields:"RFI raised for design issues to be reported to HO, drawing register status", source:"Site; D&D"},
+    {sec:"Valuation", fields:"Value of work completed — daily and cumulative", source:"Certified quantities × rates"},
+    {sec:"Evidence", fields:"Progress photographs for each activity performed", source:"Site"}]},
+
+  {sop:"PL-02", no:"RBD-FOR-PL-__", name:"Weekly Progress Report", status:"build",
+   freq:"Weekly", prepared:"HO / Site Planning", approved:"Reviewed by HOD-Planning and Project Manager",
+   dist:"HOD-Planning; Project Manager",
+   why:"The report the review introduced, and the one the Percent Plan Complete measure now cites. Section C is the point of the whole document — PPC is only useful if reasons for non-completion are recorded against a fixed category list, because the value comes from what recurs across weeks, not from any single week's percentage.",
+   sections:[
+    {sec:"A · Header", fields:"Project, week number, week ending, prepared by, issue date", source:"—"},
+    {sec:"B · Position", fields:"Activity, planned this week, achieved, variance, cumulative % against look-ahead plan", source:"Four-Month Plan; DPR"},
+    {sec:"C · PPC", fields:"Tasks committed in last week's plan (n), completed as planned (n), *PPC %*, trend against previous four weeks", source:"Prior week's report; DPR"},
+    {sec:"D · Reasons", fields:"Task not completed, reason category — design, material, labour, plant, approval, weather, preceding work, space — owner, times this cause has recurred", source:"Site; fixed category list"},
+    {sec:"E · Exceptions", fields:"Exception arising this week, activity affected, on critical path Y/N, impact in days", source:"Schedule; DPR"},
+    {sec:"F · Actions", fields:"Corrective action agreed, owner, committed date, status of actions from prior weeks", source:"Week's review"},
+    {sec:"G · Next week", fields:"Tasks committed for the coming week, constraints cleared Y/N", source:"Constraint register"},
+    {sec:"H · Sign-off", fields:"Prepared by, reviewed by HOD-PL and Project Manager, date", source:"—"}]},
+
+  {sop:"PL-02", no:"RBD-FOR-PL-02", name:"Fortnightly Review Report", status:"amend",
+   freq:"Fortnightly", prepared:"HO Planning, with Project Planning Engineer", approved:"GM-Projects",
+   dist:"All HODs; MGMT",
+   why:"The SOP fixes the agenda — project progress, status of sales, new phase launches. Three additions: an action register, because the SOP now requires decisions tracked to closure and nothing else carries them; the critical path position, which PL-01 requires restated at every schedule update; and the constraints falling due before the next review, the only forward-looking item in the pack.",
+   sections:[
+    {sec:"Progress", fields:"Physical progress by tower against plan, cumulative %, slippage since last review", source:"DPR; weekly reports"},
+    {sec:"Schedule", fields:"*Critical path as at this review and movement since the last one*, milestones at risk", source:"Current schedule"},
+    {sec:"Sales", fields:"Status of sales, bookings against plan", source:"Sales / CRM"},
+    {sec:"Launches", fields:"New phase launches, readiness position", source:"Launch tracker"},
+    {sec:"Constraints", fields:"*Constraint register items falling due before the next review*, owner, status", source:"Constraint register"},
+    {sec:"Actions", fields:"*Prior actions with closed / open / overdue status*; *new decisions and actions with named owner and committed date*", source:"This and previous minutes"},
+    {sec:"Sign-off", fields:"Prepared by, confirmed by GM-Projects, circulation date", source:"—"}]},
+
+  {sop:"PL-02", no:"RBD-FOR-PL-03", name:"Monthly Progress Report", status:"amend",
+   freq:"Monthly, finalised within 5 days of month end", prepared:"HO Planning, with Project Planning Engineer",
+   approved:"GM-Projects", dist:"Top Management; HODs",
+   why:"The report that changed most in the review. It previously stated where the project was; it must now also state where it will finish, how confident that is, and what the work completed is worth. Section B is a structural change rather than an addition — the SOP now requires reporting by exception, so the full dataset moves to annexures and the front of the report carries only major variances with a cause and a named owner.",
+   sections:[
+    {sec:"A · Header", fields:"Project, reporting month, prepared by, approved by, issue date, *reconciliation statement — reconciled to source on (date) by (name)*", source:"—"},
+    {sec:"B · Exceptions", fields:"*Major variances only*, each with attributed cause and named owner. Full dataset moves to annexure", source:"Sections C–L"},
+    {sec:"C · Physical", fields:"Planned vs actual by WBS level 2, cumulative %, movement in the month", source:"DPR; High-rise"},
+    {sec:"D · Schedule", fields:"Baseline milestone dates vs actual and forecast; *critical path and its movement*; milestones at risk", source:"R0; current schedule"},
+    {sec:"E · Forecast", fields:"*Forecast completion date alongside the baseline date*, variance in days, *assumptions the forecast rests on*; *confidence level and principal risks that would move it*", source:"Current schedule; risk register"},
+    {sec:"F · Earned value", fields:"*Planned work done from the approved curve, achieved work done, cost variance, schedule variance, forecast value at completion*", source:"Work-done curve; certified value. Jointly with Estimation"},
+    {sec:"G · Targets", fields:"Target issued at month start, achievement, variance", source:"Business Plan; DPR"},
+    {sec:"H · Delay", fields:"Summary of the month's delay analysis — assignable causes, responsible function, days", source:"Delay analysis"},
+    {sec:"I · Recovery", fields:"*Where a milestone is at risk: options with time recovered, cost and residual risk quantified*, recommendation", source:"Delay analysis"},
+    {sec:"J · Risk", fields:"Risk register movements since last month, new risks, risks closed", source:"Project risk register"},
+    {sec:"K · Constraints", fields:"Items overdue; long-lead items approaching their latest order date", source:"Constraint register"},
+    {sec:"L · Verification", fields:"*Sample of claimed progress tested against physical; divergence between physical and certified progress*", source:"Planning verification; CBD certification"},
+    {sec:"M · Approval", fields:"Prepared by, approved by GM-Projects, date", source:"—"}]},
+
+  {sop:"PL-02", no:"Unregistered", name:"Delay Analysis", status:"unregistered",
+   freq:"Monthly, within 3 days of month end", prepared:"HO Planning",
+   approved:"HOD Design, Projects, Purchase, P&M sign-off; GM-Projects approval",
+   dist:"Top Management",
+   why:"The KPI table cites a Delay Analysis format as its reference document and the process description mandates the analysis monthly with four HOD sign-offs — but it appears in neither Formats list. The August 2026 version is the working standard. One field it does not have is the method: the SOP names none, so recording which method was used is the minimum that makes one month comparable with the next.",
+   sections:[
+    {sec:"Header", fields:"Project, month, prepared by, *method of analysis used*, data cut-off date", source:"—"},
+    {sec:"Position", fields:"Milestone, R0 date, current forecast, delay in days, movement this month", source:"R0; current schedule"},
+    {sec:"Causes", fields:"Delay event, days attributed, responsible function, *evidence reference — DPR, hindrance register or correspondence*, concurrent cause Y/N", source:"Contemporaneous records"},
+    {sec:"Sign-off", fields:"One row per HOD — Design, Projects, Purchase, P&M: name, agrees Y/N, comment, date", source:"HOD review"},
+    {sec:"Recovery", fields:"Where a milestone is at risk: option, time recovered, cost, residual risk, recommended Y/N", source:"Planning; Execution"},
+    {sec:"Approval", fields:"Approved by GM-Projects, date; circulated to Top Management on", source:"—"}]},
+
+  {sop:"PL-02", no:"RBD-FOR-PL-04", name:"Finishing Format & Billing Milestone Advice", status:"amend",
+   freq:"On achievement, plus a monthly 3-month forecast", prepared:"Project Team", approved:"HO Planning",
+   dist:"CRM; GM-Projects; cc Sales, Marketing, Accounts, EA, MGMT",
+   why:"This format now does two jobs and the second is new. Confirming a milestone triggers a demand on a customer, so the confirmation needs a QC reference behind it. The forward-looking block is what CRM and Finance use to forecast three months of cash inflow, and a live KPI measures the accuracy of exactly those dates — which only works if the estimate is recorded when it is made.",
+   sections:[
+    {sec:"Site update", fields:"Project, tower, activity completion status, date", source:"DPR; Project Team"},
+    {sec:"Flat completion", fields:"Unit, floor, tower, stage reached, date achieved", source:"Site; QC"},
+    {sec:"Billing milestone", fields:"*Milestone achieved, tower / units covered, date achieved, QC sign-off reference, approved by HO Planning*", source:"Site; QC; Planning approval"},
+    {sec:"3-month forecast", fields:"*Billing milestones expected in the next three months, estimated date, basis, confidence*", source:"Current schedule — feeds the CRM cash forecast"},
+    {sec:"Accuracy log", fields:"*Estimate previously given vs date actually achieved, variance in days*", source:"Prior issues of this format — feeds the billing-date KPI"}]},
+
+  {sop:"PL-02", no:"Unregistered", name:"Material & Contract Schedule Advice", status:"unregistered",
+   freq:"Monthly", prepared:"HO Planning", approved:"—",
+   dist:"Purchase (material); Contracts (contract)",
+   why:"Two outbound advices the SOP obliges Planning to issue every month. These turn the constraint register from a list Planning keeps into something Planning actually drives — the register records the requirement, these advices place it with the function that has to act. Both carry a computed days to latest order date, the field that makes the advice actionable rather than informational.",
+   sections:[
+    {sec:"Material", fields:"Item, specification, quantity, activity it feeds, required-on-site date, lead time, *latest order date*, *days remaining to latest order date*, PO status, owner", source:"Constraint register; schedule; High-rise"},
+    {sec:"Contract", fields:"Work package, estimated value, required award date, tendering lead time, *latest tender start date*, days remaining, award status, owner", source:"Constraint register; schedule"},
+    {sec:"Exceptions", fields:"Items past their latest order or tender date, with days overrun and escalation status", source:"Computed"}]},
+
+  {sop:"PL-02", no:"Unregistered", name:"Hindrance Register", status:"unregistered",
+   freq:"Continuous; reviewed weekly and monthly", prepared:"HO / Site Planning",
+   approved:"Escalation to GM-Projects past the stated period", dist:"Project review",
+   why:"PL-02 records that a lot of issue resolution happens over whatsapp, which is exactly what this register competes with. The design consequence is the closed-in-channel field: if an issue was actually settled informally, the register should capture that rather than show a gap, otherwise it quietly becomes fiction and the escalation rule never fires.",
+   sections:[
+    {sec:"Raise", fields:"Hindrance ID, date raised, source DPR reference, description, activity affected, on critical path Y/N", source:"DPR"},
+    {sec:"Ownership", fields:"Named owner, function, target resolution date", source:"Planning; site"},
+    {sec:"Ageing", fields:"Days open, *escalated to GM-Projects Y/N and date*, breach of the stated period Y/N", source:"Computed"},
+    {sec:"Close", fields:"Resolution recorded, date closed, days lost, *closed in channel rather than in register Y/N*", source:"Planning"}]},
+
+  {sop:"PL-02", no:"Unregistered", name:"Constraint & Drawing Requirement Register", status:"unregistered",
+   freq:"Continuous; reviewed at project review", prepared:"HO Planning", approved:"—",
+   dist:"D&D; Purchase; Contracts",
+   why:"The only preventive record in the Planning process — everything else reports delay after it has occurred. The required-by date must be derived by backward pass from the activity it gates against the applicable lead time, not estimated; that single rule is what makes the register capable of raising an item before it is late rather than confirming afterwards that it was.",
+   sections:[
+    {sec:"Item", fields:"Constraint ID, class — drawing, statutory approval, material, plant, subcontract — description", source:"Look-ahead plan"},
+    {sec:"Linkage", fields:"Activity it gates, activity start date, on critical path Y/N", source:"Schedule"},
+    {sec:"Timing", fields:"Applicable lead time, *required-by date derived by backward pass*, latest raise or order date, days remaining", source:"Computed from the schedule"},
+    {sec:"Ownership", fields:"Named owner, function it was raised to, date raised", source:"Planning"},
+    {sec:"Status", fields:"Open, raised, committed, cleared; date cleared; days overrun if late", source:"Project review"}]},
+
+  {sop:"PL-01", no:"RBD-FOR-PL-__", name:"Project Charter", status:"build",
+   freq:"Once, before the master schedule", prepared:"HO Planning", approved:"GM-Projects",
+   dist:"GM-Projects; HODs",
+   why:"PL-01 states its contents precisely — scope, objectives, constraints, key planning milestones, and the governance and approval route — so the template writes itself from the clause. The one addition worth making is scope exclusions: a charter that lists only what is in scope settles far fewer arguments than one that also says what is out. PL-01 records that no format is finalised.",
+   sections:[
+    {sec:"Identity", fields:"Project, location, phase(s) covered, land parcel, charter date, version", source:"Business Plan; BD"},
+    {sec:"Scope", fields:"Buildings, units and mix, construction area, *explicit exclusions*", source:"Phasing decision; Business Plan"},
+    {sec:"Objectives", fields:"Completion, launch, handover, quality and safety objectives", source:"Management"},
+    {sec:"Milestones", fields:"Key planning milestones with target dates — the dates the master schedule must satisfy", source:"Phasing; Business Plan"},
+    {sec:"Constraints", fields:"Statutory, site, resource, commercial and seasonal constraints known at charter stage", source:"BD; Design; Planning"},
+    {sec:"Assumptions", fields:"Assumptions the plan rests on, and what changes if each fails", source:"Planning"},
+    {sec:"Governance", fields:"Approval route, decision rights, review forums and cadence, escalation path", source:"PL-01; PL-02"},
+    {sec:"Sign-off", fields:"Prepared by HO Planning, approved by GM-Projects, date", source:"—"}]},
+
+  {sop:"PL-01", no:"RBD-FOR-PL-__", name:"Planned Work-Done Curve", status:"build",
+   freq:"At baseline; reissued only on an approved revision", prepared:"HO Planning", approved:"GM-Projects",
+   dist:"Estimation; GM-Projects",
+   why:"A short table and a chart, but it carries disproportionate weight: it is the only reference against which achieved work done is measured, so every earned-value figure in the monthly report inherits its accuracy. It needs a version and an approval date on its face, because comparing this month's achievement against a curve that was quietly revised is the failure mode.",
+   sections:[
+    {sec:"Header", fields:"Project, total approved budget value, baseline reference (R0 or approved revision no.), *curve version and approval date*", source:"Budget; baseline"},
+    {sec:"By period", fields:"Month, planned value for the period, cumulative planned value, % of total budget, WBS elements contributing", source:"Budget spread over baseline dates"},
+    {sec:"Basis", fields:"How value was spread — productivity norms or historical data, on the same basis as the budget", source:"PL-01 duration basis clause"},
+    {sec:"Chart", fields:"Cumulative planned value against time; achieved value overlaid monthly in use", source:"Computed"},
+    {sec:"Approval", fields:"Prepared by, approved by GM-Projects, date", source:"—"}]},
+
+  {sop:"PL-01", no:"RBD-FOR-PL-__", name:"Project Resource Plan", status:"build",
+   freq:"With the baseline; reviewed monthly", prepared:"HO Planning", approved:"GM-Projects",
+   dist:"P&M; Project Manager",
+   why:"The SOP requires the resource plan to be linked to the schedule activities it supports, so a shortfall reads as a date consequence rather than a staffing note. Two columns carry that requirement: the linked activity ID and the date impact if unresolved. Without them this becomes a parallel document that can show a gap while the schedule shows none.",
+   sections:[
+    {sec:"Requirement", fields:"Resource type — manpower trade or plant item, *linked schedule activity ID*, quantity required by period", source:"Baseline schedule"},
+    {sec:"Availability", fields:"Available at this site, at other sites, from central resources; total available", source:"P&M; site returns"},
+    {sec:"Gap", fields:"Shortfall by period, *activities affected, date impact and critical-path effect if unresolved*", source:"Computed against the schedule"},
+    {sec:"Action", fields:"Allocation decision, escalation raised Y/N and date, re-planning applied Y/N", source:"Planning; GM-Projects"},
+    {sec:"Approval", fields:"Prepared by, approved by GM-Projects, review date", source:"—"}]},
+
+  {sop:"PL-01", no:"RBD-FOR-PL-__", name:"Project Risk Register", status:"build",
+   freq:"At baseline; reviewed at the monthly review", prepared:"HO Planning", approved:"GM-Projects",
+   dist:"Monthly management review",
+   why:"PL-01 names the risk classes to capture: monsoon windows, approval dependencies, long-lead procurement and resource availability. Impact should be recorded in days against a named milestone rather than as a high/medium/low label — the register has to support the confidence statement the monthly report now carries, and a colour cannot do that.",
+   sections:[
+    {sec:"Identification", fields:"Risk ID, description, category — monsoon, approval dependency, long-lead procurement, resource availability, design, other", source:"Baseline workshop"},
+    {sec:"Assessment", fields:"Milestone(s) threatened, likelihood, *impact in days*, exposure, is the milestone on the critical path", source:"Schedule; Planning judgement"},
+    {sec:"Response", fields:"Mitigation, owner, target date, residual impact after mitigation", source:"Planning; HODs"},
+    {sec:"Tracking", fields:"Status, last reviewed, movement since last review, date closed or realised", source:"Monthly review"}]},
+
+  {sop:"PL-01", no:"RBD-FOR-PL-__", name:"Site Logistics Plan", status:"build",
+   freq:"Once per project; revised on phasing change", prepared:"HO Planning",
+   approved:"GM-Projects", dist:"Project Manager(s); Project Coordinator",
+   why:"A drawing rather than a report, so the template is a content checklist plus an approval block — the ten locations PL-01 requires the plan to indicate, so nothing is omitted and a reviewer can check completeness without re-reading the SOP. Inputs come from the Project Planning Engineer and HOD-Safety.",
+   sections:[
+    {sec:"Built form", fields:"Building footprint; mock-up and sales office", source:"PL-01 clause list"},
+    {sec:"Access", fields:"Entry gates; provision for vehicular movement within the site", source:"PL-01 clause list"},
+    {sec:"Facilities", fields:"Labour housing; stores; provision for services area", source:"PL-01 clause list"},
+    {sec:"Plant", fields:"RMC plant; tower crane; equipment provision", source:"PL-01 clause list; resource plan"},
+    {sec:"Approval", fields:"Prepared by, safety input by HOD-Safety, site input by PPE, approved by GM-Projects, issue date, revision", source:"—"}]},
+
+  {sop:"PL-01", no:"Unregistered", name:"Schedule Revision Register", status:"unregistered",
+   freq:"On each approved revision", prepared:"HO Planning",
+   approved:"GM-Projects; Management if outside the annual window", dist:"All contributing functions",
+   why:"PL-01 says any change to a baseline date requires an approved schedule revision — but never says where revisions are recorded. Without this register an unapproved change to R0 leaves no artefact behind, and there is nothing to audit against. It also carries the three positions the SOP now distinguishes: original baseline R0, current forecast, and approved revised baseline.",
+   sections:[
+    {sec:"Revision", fields:"Revision number, date, trigger — annual re-look, statutory extension, or Management-approved exception", source:"Planning"},
+    {sec:"Change", fields:"Milestones and dates changed, from / to, days moved, reason recorded", source:"Schedule comparison"},
+    {sec:"Positions", fields:"*R0 retained Y/N, current forecast reference, approved revised baseline reference*", source:"Scheduling tool"},
+    {sec:"Approval", fields:"Approved by, date, Management approval where outside the annual window, distribution record", source:"—"}]}
+];
+
 const DEPT_COLORS = {
   "Planning":"#3b82f6","CRM":"#8b5cf6","Sales":"#d97706","Pre-Sales":"#ea580c",
   "Contracts":"#0d9488","CBD":"#0d9488","Execution":"#4f46e5","Safety":"#dc2626",
@@ -14889,7 +15271,7 @@ function showView(id, extra) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('view-'+id).classList.add('active');
-  const navMap = {sops:'sops','sop-detail':'sops',gaps:'gaps',agents:'agents','agent-detail':'agents',dashboard:'dashboard','admin-review':'admin-review'};
+  const navMap = {sops:'sops','sop-detail':'sops',gaps:'gaps',agents:'agents','agent-detail':'agents',audit:'audit',formats:'formats',dashboard:'dashboard','admin-review':'admin-review'};
   if(navMap[id]) document.querySelector(`[onclick="showView('${navMap[id]}')"]`)?.classList.add('active');
 }
 
@@ -15249,6 +15631,20 @@ function openAgentEditor(sopId){
   _edState={kind:'agents',sopId,rows:effectiveAgents(sopId).map(a=>({id:a.id,name:a.name,objective:a.objective}))};
   _edOpen('Edit AI Agents','Attach or detach agents and refine the name and objective shown on this SOP. Full agent internals stay in the Agent Library.');
 }
+function openAuditEditor(sopId){
+  _edState={kind:'audit',sopId,rows:effectiveAudit(sopId).map(a=>({
+    sop:a.sop||sopId, ref:a.ref||'', tier:a.tier||3, title:a.title||'', clause:a.clause||'',
+    risk:a.risk||'', test:Array.isArray(a.test)?a.test.join('\n'):(a.test||''),
+    evidence:a.evidence||'', sample:a.sample||'', freq:a.freq||''}))};
+  _edOpen('Edit Audit Programme','Controls tested against this SOP. They also appear in the global Audit Programme view.');
+}
+function openFormatEditor(sopId){
+  _edState={kind:'formats',sopId,rows:effectiveFormats(sopId).map(f=>({
+    sop:f.sop||sopId, no:f.no||'', name:f.name||'', status:f.status||'build',
+    freq:f.freq||'', prepared:f.prepared||'', approved:f.approved||'', dist:f.dist||'', why:f.why||'',
+    sections:(f.sections||[]).map(x=>`${x.sec} | ${x.fields} | ${x.source||''}`).join('\n')}))};
+  _edOpen('Edit Report Formats','Records this SOP requires. One line per section, written as  Section | Fields | Source.');
+}
 function _edOpen(title,sub){
   const sop=SOPS.find(s=>s.id===_edState.sopId);
   document.getElementById('ed-title').textContent=title;
@@ -15269,7 +15665,7 @@ function _edRender(){
   const b=document.getElementById('ed-body');
   const k=_edState.kind;
   if(!_edState.rows.length){
-    b.innerHTML=`<p style="font-size:13px;color:#94a3b8;font-style:italic;margin:4px 0 12px">Nothing here yet — add the first ${k==='gaps'?'gap':'agent'}.</p>`;
+    b.innerHTML=`<p style="font-size:13px;color:#94a3b8;font-style:italic;margin:4px 0 12px">Nothing here yet — add the first ${({gaps:'gap',agents:'agent',audit:'control',formats:'record'})[k]||'entry'}.</p>`;
   } else if(k==='gaps'){
     b.innerHTML=_edState.rows.map((g,i)=>`
       <div class="ed-row">
@@ -15287,6 +15683,74 @@ function _edRender(){
         <label>Description</label>
         <textarea oninput="edSet(${i},'desc',this.value)" placeholder="What is missing and why it matters">${_esc(g.desc)}</textarea>
       </div>`).join('');
+  } else if(k==='audit'){
+    b.innerHTML=_edState.rows.map((a,i)=>`
+      <div class="ed-row">
+        <div class="ed-row-top"><div class="ed-idx">${i+1}</div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600">CONTROL ${_esc(a.ref)||i+1}</div>
+          <button class="ed-del" onclick="edDelete(${i})">Remove</button></div>
+        <div class="ed-grid2">
+          <div><label>Reference</label>
+            <input type="text" value="${_esc(a.ref)}" oninput="edSet(${i},'ref',this.value)" placeholder="e.g. A-01"></div>
+          <div><label>Tier</label>
+            <select onchange="edSet(${i},'tier',parseInt(this.value,10))">
+              ${Object.keys(AUDIT_TIERS).map(t=>`<option value="${t}"${String(t)===String(a.tier)?' selected':''}>${t==='5'?'Immediate':'Tier '+t} — ${_esc(AUDIT_TIERS[t].name)}</option>`).join('')}
+            </select></div>
+        </div>
+        <label>Control</label>
+        <input type="text" value="${_esc(a.title)}" oninput="edSet(${i},'title',this.value)" placeholder="What the control is">
+        <label style="margin-top:8px">SOP clause it tests</label>
+        <textarea oninput="edSet(${i},'clause',this.value)" placeholder="Quote the clause verbatim">${_esc(a.clause)}</textarea>
+        <label style="margin-top:8px">Risk</label>
+        <textarea oninput="edSet(${i},'risk',this.value)" placeholder="What goes wrong if this control fails">${_esc(a.risk)}</textarea>
+        <label style="margin-top:8px">Procedure — one step per line</label>
+        <textarea oninput="edSet(${i},'test',this.value)" placeholder="One test step per line">${_esc(a.test)}</textarea>
+        <div class="ed-grid2" style="margin-top:8px">
+          <div><label>Sample</label>
+            <input type="text" value="${_esc(a.sample)}" oninput="edSet(${i},'sample',this.value)" placeholder="e.g. 2 projects x 15 activities"></div>
+          <div><label>Frequency</label>
+            <input type="text" value="${_esc(a.freq)}" oninput="edSet(${i},'freq',this.value)" placeholder="e.g. Quarterly"></div>
+        </div>
+        <label style="margin-top:8px">Evidence</label>
+        <input type="text" value="${_esc(a.evidence)}" oninput="edSet(${i},'evidence',this.value)" placeholder="Records to obtain">
+        <label style="margin-top:8px">Applies to SOP(s)</label>
+        <input type="text" value="${_esc(a.sop)}" oninput="edSet(${i},'sop',this.value)" placeholder="e.g. PL-01 / PL-02">
+      </div>`).join('');
+  } else if(k==='formats'){
+    b.innerHTML=_edState.rows.map((f,i)=>`
+      <div class="ed-row">
+        <div class="ed-row-top"><div class="ed-idx">${i+1}</div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600">${_esc(f.no)||'RECORD '+(i+1)}</div>
+          <button class="ed-del" onclick="edDelete(${i})">Remove</button></div>
+        <div class="ed-grid2">
+          <div><label>Format number</label>
+            <input type="text" value="${_esc(f.no)}" oninput="edSet(${i},'no',this.value)" placeholder="RBD-FOR-XX-01 or Unregistered"></div>
+          <div><label>Status</label>
+            <select onchange="edSet(${i},'status',this.value)">
+              ${Object.keys(FORMAT_STATUS).map(k2=>`<option value="${k2}"${k2===f.status?' selected':''}>${_esc(FORMAT_STATUS[k2].label)}</option>`).join('')}
+            </select></div>
+        </div>
+        <label>Record name</label>
+        <input type="text" value="${_esc(f.name)}" oninput="edSet(${i},'name',this.value)" placeholder="e.g. Weekly Progress Report">
+        <div class="ed-grid2" style="margin-top:8px">
+          <div><label>Frequency</label>
+            <input type="text" value="${_esc(f.freq)}" oninput="edSet(${i},'freq',this.value)"></div>
+          <div><label>Prepared by</label>
+            <input type="text" value="${_esc(f.prepared)}" oninput="edSet(${i},'prepared',this.value)"></div>
+        </div>
+        <div class="ed-grid2" style="margin-top:8px">
+          <div><label>Approved by</label>
+            <input type="text" value="${_esc(f.approved)}" oninput="edSet(${i},'approved',this.value)"></div>
+          <div><label>Circulated to</label>
+            <input type="text" value="${_esc(f.dist)}" oninput="edSet(${i},'dist',this.value)"></div>
+        </div>
+        <label style="margin-top:8px">Why this record, and what changed</label>
+        <textarea oninput="edSet(${i},'why',this.value)" placeholder="What this record is for">${_esc(f.why)}</textarea>
+        <label style="margin-top:8px">Sections — one per line, as  Section | Fields | Source</label>
+        <textarea style="min-height:120px" oninput="edSet(${i},'sections',this.value)" placeholder="Header | Project, date, prepared by | Site">${_esc(f.sections)}</textarea>
+        <label style="margin-top:8px">Applies to SOP(s)</label>
+        <input type="text" value="${_esc(f.sop)}" oninput="edSet(${i},'sop',this.value)" placeholder="e.g. PL-02">
+      </div>`).join('');
   } else {
     b.innerHTML=_edState.rows.map((a,i)=>{
       const meta=agentMeta(a.id);
@@ -15299,6 +15763,10 @@ function _edRender(){
         <label style="margin-top:8px">Objective</label>
         <textarea oninput="edSet(${i},'objective',this.value)" placeholder="What this agent automates for this SOP">${_esc(a.objective)}</textarea>
       </div>`;}).join('');
+  }
+  if(k==='audit'||k==='formats'){
+    b.insertAdjacentHTML('beforeend',`<button class="ed-add" onclick="edAdd()">+ Add ${k==='audit'?'control':'record'}</button>`);
+    return;
   }
   b.insertAdjacentHTML('beforeend', k==='gaps'
     ? `<button class="ed-add" onclick="edAdd()">+ Add gap</button>`
@@ -15315,9 +15783,14 @@ function _edRender(){
 function edSet(i,key,val){_edState.rows[i][key]=val;}
 function edDelete(i){_edState.rows.splice(i,1);_edRender();}
 function edAdd(){
-  _edState.rows.push(_edState.kind==='gaps'
-    ? {cat:GAP_CATS[0],title:'',desc:''}
-    : {id:0,name:'',objective:''});
+  const k=_edState.kind, sid=_edState.sopId;
+  const blank={
+    gaps:   ()=>({cat:GAP_CATS[0],title:'',desc:''}),
+    agents: ()=>({id:0,name:'',objective:''}),
+    audit:  ()=>({sop:sid,ref:'',tier:3,title:'',clause:'',risk:'',test:'',evidence:'',sample:'',freq:''}),
+    formats:()=>({sop:sid,no:'',name:'',status:'build',freq:'',prepared:'',approved:'',dist:'',why:'',sections:''})
+  }[k];
+  _edState.rows.push(blank?blank():{});
   _edRender();
 }
 function edAttachAgent(){
@@ -15330,20 +15803,63 @@ function edAttachAgent(){
 }
 function editorResetToOriginal(){
   const k=_edState.kind,id=_edState.sopId;
-  _edState.rows=(k==='gaps'?baseGaps(id):baseAgents(id)).map(x=>({...x}));
+  if(k==='audit'){
+    _edState.rows=baseAudit(id).map(a=>({sop:a.sop||id,ref:a.ref||'',tier:a.tier||3,title:a.title||'',
+      clause:a.clause||'',risk:a.risk||'',test:Array.isArray(a.test)?a.test.join('\n'):(a.test||''),
+      evidence:a.evidence||'',sample:a.sample||'',freq:a.freq||''}));
+  } else if(k==='formats'){
+    _edState.rows=baseFormats(id).map(f=>({sop:f.sop||id,no:f.no||'',name:f.name||'',status:f.status||'build',
+      freq:f.freq||'',prepared:f.prepared||'',approved:f.approved||'',dist:f.dist||'',why:f.why||'',
+      sections:(f.sections||[]).map(x=>`${x.sec} | ${x.fields} | ${x.source||''}`).join('\n')}));
+  } else {
+    _edState.rows=(k==='gaps'?baseGaps(id):baseAgents(id)).map(x=>({...x}));
+  }
   _edRender();
+}
+const _EDLABEL={gaps:'Gap Analysis',agents:'AI Agents',audit:'Audit Programme',formats:'Report Formats'};
+function _edClean(kind,rows,sopId){
+  const t=v=>String(v==null?'':v).trim();
+  if(kind==='gaps')   return rows.map(r=>({cat:t(r.cat),title:t(r.title),desc:t(r.desc)})).filter(r=>r.title||r.desc);
+  if(kind==='agents') return rows.map(r=>({id:r.id||0,name:t(r.name),objective:t(r.objective)})).filter(r=>r.name||r.objective);
+  if(kind==='audit')  return rows.map(r=>({
+      sop:t(r.sop)||sopId, ref:t(r.ref), tier:parseInt(r.tier,10)||3, title:t(r.title),
+      clause:t(r.clause), risk:t(r.risk),
+      test:String(r.test||'').split('\n').map(x=>x.trim()).filter(Boolean),
+      evidence:t(r.evidence), sample:t(r.sample), freq:t(r.freq)
+    })).filter(r=>r.ref||r.title);
+  if(kind==='formats')return rows.map(r=>({
+      sop:t(r.sop)||sopId, no:t(r.no), name:t(r.name), status:t(r.status)||'build',
+      freq:t(r.freq), prepared:t(r.prepared), approved:t(r.approved), dist:t(r.dist), why:t(r.why),
+      sections:String(r.sections||'').split('\n').map(x=>x.trim()).filter(Boolean).map(line=>{
+        const parts=line.split('|');
+        return {sec:(parts[0]||'').trim(), fields:(parts[1]||'').trim(), source:(parts[2]||'').trim()};
+      }).filter(x=>x.sec||x.fields)
+    })).filter(r=>r.name);
+  return rows;
+}
+function _edValidate(kind,clean){
+  if(kind==='gaps'   && clean.some(r=>!r.title||!r.desc))      return 'Every gap needs a title and a description.';
+  if(kind==='agents' && clean.some(r=>!r.name||!r.objective))  return 'Every agent needs a name and an objective.';
+  if(kind==='audit'){
+    if(clean.some(r=>!r.ref||!r.title))            return 'Every control needs a reference and a title.';
+    if(clean.some(r=>!r.test.length))              return 'Every control needs at least one procedure step.';
+    const refs=clean.map(r=>r.ref);
+    if(new Set(refs).size!==refs.length)           return 'Two controls share the same reference. References must be unique.';
+  }
+  if(kind==='formats'){
+    if(clean.some(r=>!r.name))                     return 'Every record needs a name.';
+    if(clean.some(r=>!r.sections.length))          return 'Every record needs at least one section line, written as  Section | Fields | Source.';
+  }
+  return null;
 }
 async function editorSave(){
   const {kind,sopId,rows}=_edState;
-  const clean=rows.map(r=>kind==='gaps'
-      ? {cat:(r.cat||'').trim(),title:(r.title||'').trim(),desc:(r.desc||'').trim()}
-      : {id:r.id||0,name:(r.name||'').trim(),objective:(r.objective||'').trim()})
-    .filter(r=>kind==='gaps'?(r.title||r.desc):(r.name||r.objective));
-  const bad=clean.some(r=>kind==='gaps'?(!r.title||!r.desc):(!r.name||!r.objective));
-  if(bad){alert(kind==='gaps'?'Every gap needs a title and a description.':'Every agent needs a name and an objective.');return;}
+  const clean=_edClean(kind,rows,sopId);
+  const bad=_edValidate(kind,clean);
+  if(bad){alert(bad);return;}
   const btn=document.getElementById('ed-save');btn.disabled=true;btn.textContent='Saving…';
-  const oldValue=kind==='gaps'?effectiveGaps(sopId):effectiveAgents(sopId);
-  const payload={field:kind,oldValue,newValue:clean,suggestion:`Manual edit of ${kind==='gaps'?'Gap Analysis':'AI Agents'} for ${sopId}`};
+  const oldValue=fieldValue(SOPS.find(s=>s.id===sopId)||{id:sopId},kind);
+  const payload={field:kind,oldValue,newValue:clean,suggestion:`Manual edit of ${_EDLABEL[kind]||kind} for ${sopId}`};
   try{
     const url=_isAdmin?`/api/sops/${encodeURIComponent(sopId)}/accept`:`/api/sops/${encodeURIComponent(sopId)}/submit`;
     const headers={'Content-Type':'application/json'};
@@ -15356,7 +15872,7 @@ async function editorSave(){
     }
     closeEditor();
     if(_isAdmin){
-      buildGaps();buildAgentGrid();
+      buildGaps();buildAgentGrid();buildAuditFilters();buildAudit();buildFormatFilters();buildFormats();
       await showSOPDetail(sopId);
     }else{
       alert('Thanks — your suggestion has been sent to the admin for review.');
@@ -15377,12 +15893,18 @@ async function loadAllOverrides(){
 function fieldValue(sop,field){
   if(field==='gaps')return effectiveGaps(sop.id);
   if(field==='agents')return effectiveAgents(sop.id);
+  if(field==='audit')return effectiveAudit(sop.id);
+  if(field==='formats')return effectiveFormats(sop.id);
   return sop[field];
 }
 function fmtFieldVal(v){
   if(!Array.isArray(v))return v==null?'':String(v);
   return v.map((x,i)=>{
     if(x&&typeof x==='object'){
+      if(x.ref&&Array.isArray(x.test))
+        return `${i+1}. [Tier ${x.tier}] ${x.ref} — ${x.title||''}\n     Risk: ${x.risk||''}\n     Test: ${x.test.join(' / ')}\n     Sample: ${x.sample||''} · ${x.freq||''}`;
+      if(x.name&&Array.isArray(x.sections))
+        return `${i+1}. [${x.status||''}] ${x.no||''} ${x.name}\n     ${(x.sections||[]).map(sx=>`${sx.sec}: ${sx.fields}`).join('\n     ')}`;
       const head=x.title||x.name||'';
       const body=x.desc||x.objective||'';
       const pre=x.cat?`[${x.cat}] `:'';
@@ -15409,6 +15931,164 @@ function effectiveAgents(sopId){
   const o=EDIT_OVERRIDES[sopId]&&EDIT_OVERRIDES[sopId].agents;
   return Array.isArray(o)?o:baseAgents(sopId);
 }
+// ─── AUDIT / FORMAT HELPERS ──────────────────────────────────────────────────
+function _sopMatch(field,sopId){return String(field||'').split('/').map(x=>x.trim()).includes(sopId);}
+function baseAudit(sopId){return AUDIT.filter(a=>_sopMatch(a.sop,sopId)).map(a=>({...a}));}
+function baseFormats(sopId){return FORMATS.filter(f=>_sopMatch(f.sop,sopId)).map(f=>({...f}));}
+function effectiveAudit(sopId){
+  const o=EDIT_OVERRIDES[sopId]&&EDIT_OVERRIDES[sopId].audit;
+  return Array.isArray(o)?o:baseAudit(sopId);
+}
+function effectiveFormats(sopId){
+  const o=EDIT_OVERRIDES[sopId]&&EDIT_OVERRIDES[sopId].formats;
+  return Array.isArray(o)?o:baseFormats(sopId);
+}
+function allEffectiveAudit(){
+  const out=[],seen=new Set();
+  SOPS.forEach(s=>effectiveAudit(s.id).forEach(a=>{
+    const k=a.ref+'|'+(a.sop||s.id);
+    if(seen.has(k))return; seen.add(k);
+    out.push({...a,_sop:a.sop||s.id});
+  }));
+  return out;
+}
+function allEffectiveFormats(){
+  const out=[],seen=new Set();
+  SOPS.forEach(s=>effectiveFormats(s.id).forEach(f=>{
+    const k=(f.no||'')+'|'+f.name+'|'+(f.sop||s.id);
+    if(seen.has(k))return; seen.add(k);
+    out.push({...f,_sop:f.sop||s.id});
+  }));
+  return out;
+}
+function tierMeta(t){return AUDIT_TIERS[t]||{name:'Unclassified',color:'#64748b'};}
+function statusMeta(k){return FORMAT_STATUS[k]||{label:k||'—',color:'#64748b'};}
+// *highlight* marks a field the review added or changed
+function fmtFields(t){return String(t||'').replace(/\*([^*]+)\*/g,'<span style="color:#7c3aed;font-weight:600">$1</span>');}
+function sopsOf(field){return String(field||'').split('/').map(x=>x.trim()).filter(Boolean);}
+function deptsOf(field){return [...new Set(sopsOf(field).map(id=>SOPS.find(s=>s.id===id)?.dept).filter(Boolean))];}
+
+// ─── AUDIT PROGRAMME VIEW ────────────────────────────────────────────────────
+let auditTierFilter='all', auditDeptFilter='all', auditSearch='';
+function buildAuditFilters(){
+  const tf=document.getElementById('audit-tier-filters');
+  if(tf)tf.innerHTML=`<button class="filter-btn active" onclick="auditTierFilter='all';setActiveFilter(this,'audit-tier-filters');buildAudit()">All</button>`+
+    Object.keys(AUDIT_TIERS).map(t=>`<button class="filter-btn" onclick="auditTierFilter='${t}';setActiveFilter(this,'audit-tier-filters');buildAudit()">${t==='5'?'':'Tier '+t+' — '}${AUDIT_TIERS[t].name}</button>`).join('');
+  const depts=[...new Set(allEffectiveAudit().flatMap(a=>deptsOf(a._sop)))].sort();
+  const df=document.getElementById('audit-dept-filters');
+  if(df)df.innerHTML=`<button class="filter-btn active" onclick="auditDeptFilter='all';setActiveFilter(this,'audit-dept-filters');buildAudit()">All</button>`+
+    depts.map(d=>`<button class="filter-btn" onclick="auditDeptFilter='${d}';setActiveFilter(this,'audit-dept-filters');buildAudit()">${d}</button>`).join('');
+}
+function buildAudit(){
+  const el=document.getElementById('audit-content'); if(!el)return;
+  const q=(auditSearch||'').toLowerCase();
+  const ALL=allEffectiveAudit();
+  const filtered=ALL.filter(a=>{
+    const mt=auditTierFilter==='all'||String(a.tier)===String(auditTierFilter);
+    const md=auditDeptFilter==='all'||deptsOf(a._sop).includes(auditDeptFilter);
+    const hay=[a.ref,a.title,a.risk,a.clause,a.evidence,a._sop].join(' ').toLowerCase();
+    return mt&&md&&(!q||hay.includes(q));
+  });
+  const res=document.getElementById('audit-results');
+  if(res)res.textContent=filtered.length===ALL.length?`${ALL.length} controls`:`Showing ${filtered.length} of ${ALL.length} controls`;
+  if(!filtered.length){el.innerHTML=`<div class="card" style="text-align:center;padding:40px;color:#94a3b8;font-size:14px">No controls match the current filters.</div>`;return;}
+  const byTier={};
+  filtered.forEach(a=>{(byTier[a.tier]=byTier[a.tier]||[]).push(a);});
+  el.innerHTML=Object.keys(byTier).sort().map(t=>{
+    const m=tierMeta(t);
+    return `<div style="margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid ${m.color}30">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:${m.color};background:${m.color}15;padding:3px 9px;border-radius:4px">${t==='5'?'Immediate':'Tier '+t}</span>
+        <span style="font-size:14px;font-weight:700;color:#1e293b">${m.name}</span>
+        <span style="font-size:11px;color:#94a3b8">${byTier[t].length} control${byTier[t].length!==1?'s':''}</span>
+      </div>
+      ${byTier[t].map(a=>auditCard(a,m)).join('')}
+    </div>`;}).join('');
+}
+function auditCard(a,m){
+  const sops=sopsOf(a._sop);
+  return `<div class="card" style="margin-bottom:10px;padding:0;overflow:hidden;border-left:4px solid ${m.color}">
+    <div style="padding:10px 14px;background:#f8fafc;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;color:${m.color}">${a.ref}</span>
+      <span style="font-size:13px;font-weight:600;color:#1e293b;flex:1;min-width:200px">${a.title}</span>
+      ${a.noSelfCheck?'<span class="badge" style="background:#fee2e2;color:#b91c1c">no self-check</span>':''}
+      ${a.raiseFirst?'<span class="badge" style="background:#fee2e2;color:#b91c1c">raise first</span>':''}
+      ${sops.map(id=>`<span onclick="showSOPDetail('${id}')" class="sop-id" style="cursor:pointer">${id}</span>`).join('')}
+    </div>
+    <div style="padding:12px 14px">
+      ${a.clause?`<p style="margin:0 0 10px;font-size:12px;color:#64748b;font-style:italic;border-left:2px solid #cbd5e1;padding-left:10px;line-height:1.55">${a.clause}</p>`:''}
+      <div style="margin-bottom:10px"><div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;margin-bottom:3px">Risk</div>
+        <p style="margin:0;font-size:12px;color:#475569;line-height:1.55">${a.risk||''}</p></div>
+      <div style="background:#f5f3ff;border-left:2px solid #7c3aed;padding:9px 12px;margin-bottom:10px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7c3aed;margin-bottom:4px">Procedure</div>
+        <ol style="margin:0;padding-left:16px;font-size:12px;color:#475569;line-height:1.6">${(a.test||[]).map(x=>`<li>${x}</li>`).join('')}</ol>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px 18px;font-size:11px">
+        <div><div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:2px">Evidence</div><div style="color:#64748b;line-height:1.5">${a.evidence||''}</div></div>
+        <div><div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:2px">Sample</div><div style="color:#1e293b;font-weight:500">${a.sample||''}</div></div>
+        <div><div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:2px">Frequency</div><div style="color:#1e293b;font-weight:500">${a.freq||''}</div></div>
+        ${a.interfaces?`<div><div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:2px">Interfaces</div><div style="color:#64748b">${a.interfaces}</div></div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── FORMAT LIBRARY VIEW ─────────────────────────────────────────────────────
+let fmtStatusFilter='all', fmtDeptFilter='all', formatsSearch='';
+function buildFormatFilters(){
+  const sf=document.getElementById('fmt-status-filters');
+  if(sf)sf.innerHTML=`<button class="filter-btn active" onclick="fmtStatusFilter='all';setActiveFilter(this,'fmt-status-filters');buildFormats()">All</button>`+
+    Object.keys(FORMAT_STATUS).map(k=>`<button class="filter-btn" onclick="fmtStatusFilter='${k}';setActiveFilter(this,'fmt-status-filters');buildFormats()">${FORMAT_STATUS[k].label}</button>`).join('');
+  const depts=[...new Set(allEffectiveFormats().flatMap(f=>deptsOf(f._sop)))].sort();
+  const df=document.getElementById('fmt-dept-filters');
+  if(df)df.innerHTML=`<button class="filter-btn active" onclick="fmtDeptFilter='all';setActiveFilter(this,'fmt-dept-filters');buildFormats()">All</button>`+
+    depts.map(d=>`<button class="filter-btn" onclick="fmtDeptFilter='${d}';setActiveFilter(this,'fmt-dept-filters');buildFormats()">${d}</button>`).join('');
+}
+function buildFormats(){
+  const el=document.getElementById('fmt-content'); if(!el)return;
+  const q=(formatsSearch||'').toLowerCase();
+  const ALL=allEffectiveFormats();
+  const filtered=ALL.filter(f=>{
+    const ms=fmtStatusFilter==='all'||f.status===fmtStatusFilter;
+    const md=fmtDeptFilter==='all'||deptsOf(f._sop).includes(fmtDeptFilter);
+    const hay=[f.no,f.name,f.why,f._sop,(f.sections||[]).map(x=>x.sec+' '+x.fields).join(' ')].join(' ').toLowerCase();
+    return ms&&md&&(!q||hay.includes(q));
+  });
+  const res=document.getElementById('fmt-results');
+  if(res)res.textContent=filtered.length===ALL.length?`${ALL.length} records`:`Showing ${filtered.length} of ${ALL.length} records`;
+  if(!filtered.length){el.innerHTML=`<div class="card" style="text-align:center;padding:40px;color:#94a3b8;font-size:14px">No formats match the current filters.</div>`;return;}
+  el.innerHTML=filtered.map(formatCard).join('');
+}
+function formatCard(f){
+  const st=statusMeta(f.status);
+  const sops=sopsOf(f._sop||f.sop);
+  return `<div class="card" style="margin-bottom:12px;padding:0;overflow:hidden;border-top:3px solid ${st.color}">
+    <div style="padding:11px 14px;background:#f8fafc;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600;color:#94a3b8">${f.no||'—'}</span>
+      <span style="font-size:14px;font-weight:700;color:#1e293b;flex:1;min-width:200px">${f.name}</span>
+      <span class="badge" style="background:${st.color}18;color:${st.color}">${st.label}</span>
+      ${sops.map(id=>`<span onclick="showSOPDetail('${id}')" class="sop-id" style="cursor:pointer">${id}</span>`).join('')}
+    </div>
+    <div style="padding:10px 14px;background:#fcfcfd;border-bottom:1px solid #f1f5f9;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 18px;font-size:11px">
+      <div><div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8">Frequency</div><div style="color:#1e293b">${f.freq||'—'}</div></div>
+      <div><div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8">Prepared by</div><div style="color:#1e293b">${f.prepared||'—'}</div></div>
+      <div><div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8">Approved by</div><div style="color:#1e293b">${f.approved||'—'}</div></div>
+      <div><div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8">Circulated to</div><div style="color:#64748b">${f.dist||'—'}</div></div>
+    </div>
+    ${f.why?`<p style="margin:0;padding:11px 14px 0;font-size:12px;color:#475569;line-height:1.6">${f.why}</p>`:''}
+    <div style="padding:11px 14px 14px">
+      <table style="margin:0">
+        <thead><tr><th style="width:130px">Section</th><th>Fields</th><th style="width:210px">Source</th></tr></thead>
+        <tbody>${(f.sections||[]).map(x=>`<tr>
+          <td style="font-size:12px;font-weight:600;color:#1e293b;vertical-align:top">${x.sec}</td>
+          <td style="font-size:12px;color:#475569;line-height:1.55;vertical-align:top">${fmtFields(x.fields)}</td>
+          <td style="font-size:11px;color:#94a3b8;vertical-align:top">${x.source||''}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
 // agent meta (dept/phase) still comes from the master AGENTS list where the id matches
 function agentMeta(id){return AGENTS.find(a=>a.id===id)||null;}
 
@@ -15625,6 +16305,55 @@ async function showSOPDetail(id){
       </div>`;
     })()}
 
+    <!-- 14. AUDIT PROGRAMME -->
+    ${(()=>{
+      const rows=effectiveAudit(sop.id);
+      const edited=!!(EDIT_OVERRIDES[sop.id]&&EDIT_OVERRIDES[sop.id].audit);
+      const btn=`<button class="sec-edit-btn" onclick="openAuditEditor('${sop.id}')">${_isAdmin?'Edit':'Suggest edit'}</button>`;
+      if(!rows.length)return`<div class="section-box" style="border-left:4px solid #e2e8f0">
+        <div class="sec-head"><h4 style="margin:0">Audit Programme</h4>${btn}</div>
+        <p style="font-size:13px;color:#94a3b8;font-style:italic">No audit controls defined for this SOP yet.</p></div>`;
+      const byTier={};rows.forEach(a=>{(byTier[a.tier]=byTier[a.tier]||[]).push(a);});
+      const summary=Object.keys(byTier).sort().map(t=>{const m=tierMeta(t);
+        return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:${m.color};background:${m.color}12;padding:3px 8px;border-radius:10px">${byTier[t].length} ${m.name}</span>`;}).join('');
+      const body=Object.keys(byTier).sort().map(t=>byTier[t].map(a=>auditCard(a,tierMeta(t))).join('')).join('');
+      return`<div class="section-box" style="border-left:4px solid #0f766e;padding-bottom:4px">
+        <div class="sec-head">
+          <h4 style="margin:0">Audit Programme <span style="font-size:11px;font-weight:500;color:#94a3b8;text-transform:none;letter-spacing:0">(${rows.length} control${rows.length!==1?'s':''})</span>${edited?'<span class="sec-edited">edited</span>':''}</h4>
+          ${btn}
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">${summary}</div>
+        ${body}
+        <div style="margin-top:6px;text-align:right">
+          <span onclick="showView('audit')" style="font-size:11px;color:#3b82f6;cursor:pointer;font-weight:500">View the whole audit programme &rarr;</span>
+        </div>
+      </div>`;
+    })()}
+
+    <!-- 15. REPORT FORMATS -->
+    ${(()=>{
+      const rows=effectiveFormats(sop.id);
+      const edited=!!(EDIT_OVERRIDES[sop.id]&&EDIT_OVERRIDES[sop.id].formats);
+      const btn=`<button class="sec-edit-btn" onclick="openFormatEditor('${sop.id}')">${_isAdmin?'Edit':'Suggest edit'}</button>`;
+      if(!rows.length)return`<div class="section-box" style="border-left:4px solid #e2e8f0">
+        <div class="sec-head"><h4 style="margin:0">Report Formats</h4>${btn}</div>
+        <p style="font-size:13px;color:#94a3b8;font-style:italic">No report formats specified for this SOP yet.</p></div>`;
+      const byStatus={};rows.forEach(f=>{(byStatus[f.status]=byStatus[f.status]||[]).push(f);});
+      const summary=Object.keys(byStatus).map(k=>{const m=statusMeta(k);
+        return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:${m.color};background:${m.color}12;padding:3px 8px;border-radius:10px">${byStatus[k].length} ${m.label}</span>`;}).join('');
+      return`<div class="section-box" style="border-left:4px solid #6b3f73;padding-bottom:4px">
+        <div class="sec-head">
+          <h4 style="margin:0">Report Formats <span style="font-size:11px;font-weight:500;color:#94a3b8;text-transform:none;letter-spacing:0">(${rows.length} record${rows.length!==1?'s':''})</span>${edited?'<span class="sec-edited">edited</span>':''}</h4>
+          ${btn}
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">${summary}</div>
+        ${rows.map(formatCard).join('')}
+        <div style="margin-top:6px;text-align:right">
+          <span onclick="showView('formats')" style="font-size:11px;color:#3b82f6;cursor:pointer;font-weight:500">View the whole format library &rarr;</span>
+        </div>
+      </div>`;
+    })()}
+
     ${sop.driveId?`<div style="margin-top:4px;padding:10px 14px;background:#f8fafc;border-radius:8px;font-size:12px;color:#64748b;display:flex;gap:16px;align-items:center">
       <span>View original document on Google Drive:</span>
       <a href="https://drive.google.com/file/d/${sop.driveId}/view" target="_blank" rel="noopener" style="color:#3b82f6;font-weight:500">Open ${sop.id} in Drive →</a>
@@ -15742,6 +16471,7 @@ async function adminApprove(editId, btn) {
     refreshPendingCount();
     await loadAllOverrides();
     buildGapDeptFilters(); buildGaps(); buildAgentGrid();
+    buildAuditFilters(); buildAudit(); buildFormatFilters(); buildFormats();
   } catch(e) { btn.disabled = false; btn.textContent = '✓ Approve & Apply'; alert('Failed'); }
 }
 
@@ -15809,9 +16539,17 @@ buildSOPs();
 buildGapDeptFilters();
 buildGaps();
 buildAgentGrid();
+buildAuditFilters();
+buildAudit();
+buildFormatFilters();
+buildFormats();
 initAdmin();
-// pull accepted gap/agent overrides, then refresh the views that use them
-loadAllOverrides().then(()=>{buildGapDeptFilters();buildGaps();});
+// pull accepted overrides, then refresh every view that uses them
+loadAllOverrides().then(()=>{
+  buildGapDeptFilters();buildGaps();
+  buildAuditFilters();buildAudit();
+  buildFormatFilters();buildFormats();
+});
 
 // ─── BRAINSTORM PANEL ────────────────────────────────────────────────────────
 let _bsPendingChanges={}, _bsSuggestionText='';
@@ -15853,7 +16591,7 @@ async function generateSuggestion(){
     const r=await fetch(`/api/sops/${encodeURIComponent(sop.id)}/suggest`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({suggestion, sopData:{...sop,gaps:effectiveGaps(sop.id),agents:effectiveAgents(sop.id)}})
+      body:JSON.stringify({suggestion, sopData:{...sop,gaps:effectiveGaps(sop.id),agents:effectiveAgents(sop.id),audit:effectiveAudit(sop.id),formats:effectiveFormats(sop.id)}})
     });
     const data=await r.json();
     if(!r.ok)throw new Error(data.error||'Server error');
@@ -15912,7 +16650,7 @@ async function acceptField(field){
     if(field==='gaps'||field==='agents'){
       if(!EDIT_OVERRIDES[sop.id])EDIT_OVERRIDES[sop.id]={};
       EDIT_OVERRIDES[sop.id][field]=newValue;
-      buildGaps();buildAgentGrid();
+      buildGaps();buildAgentGrid();buildAuditFilters();buildAudit();buildFormatFilters();buildFormats();
     }
     // Visually mark the card as accepted
     markFieldDone(field,'accepted');
