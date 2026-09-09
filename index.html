@@ -250,6 +250,43 @@ tr:hover td{background:#fafbfc}
   .rm-wrap{overflow-x:auto}
   table{max-width:100%}
 }
+
+/* ── Section edit controls + editor modal ─────────────────────────────────── */
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.sec-edit-btn{font-size:11px;font-weight:600;color:#3b82f6;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:5px 11px;cursor:pointer}
+.sec-edit-btn:hover{background:#dbeafe}
+.sec-edited{display:inline-block;margin-left:8px;font-size:10px;font-weight:600;text-transform:none;letter-spacing:0;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:1px 7px;vertical-align:middle}
+.ed-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.42);z-index:2999}
+.ed-overlay.open{display:block}
+.ed-modal{display:none;position:fixed;z-index:3000;top:50%;left:50%;transform:translate(-50%,-50%);width:min(880px,94vw);max-height:88vh;background:#f8fafc;border-radius:14px;box-shadow:0 24px 60px rgba(15,23,42,.28);flex-direction:column;overflow:hidden}
+.ed-modal.open{display:flex}
+.ed-head{padding:16px 20px;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ed-head h3{margin:0;font-size:15px;color:#0f172a}
+.ed-head .ed-sub{font-size:12px;color:#64748b;margin-top:2px}
+.ed-close{background:none;border:none;font-size:20px;color:#94a3b8;cursor:pointer;line-height:1}
+.ed-body{padding:16px 20px;overflow-y:auto;flex:1}
+.ed-row{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin-bottom:10px}
+.ed-row-top{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.ed-row-top .ed-idx{width:22px;height:22px;min-width:22px;border-radius:50%;background:#eef2ff;color:#4f46e5;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.ed-del{margin-left:auto;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:6px;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer}
+.ed-del:hover{background:#fee2e2}
+.ed-modal label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#94a3b8;margin-bottom:4px}
+.ed-modal input[type=text],.ed-modal textarea,.ed-modal select{width:100%;font:inherit;font-size:12.5px;color:#1e293b;border:1px solid #e2e8f0;border-radius:7px;padding:7px 9px;background:#fff}
+.ed-modal textarea{resize:vertical;min-height:58px;line-height:1.55}
+.ed-modal input:focus,.ed-modal textarea:focus,.ed-modal select:focus{outline:none;border-color:#93c5fd;box-shadow:0 0 0 3px #dbeafe}
+.ed-grid2{display:grid;grid-template-columns:190px 1fr;gap:10px;margin-bottom:8px}
+.ed-add{width:100%;background:#fff;border:1px dashed #cbd5e1;color:#475569;border-radius:9px;padding:10px;font-size:12px;font-weight:600;cursor:pointer}
+.ed-add:hover{border-color:#94a3b8;background:#f8fafc}
+.ed-foot{padding:13px 20px;background:#fff;border-top:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ed-note{font-size:11.5px;color:#64748b}
+.ed-btns{display:flex;gap:8px}
+.ed-btn{border-radius:7px;font-size:12.5px;font-weight:600;padding:8px 16px;cursor:pointer;border:1px solid transparent}
+.ed-btn.sec{background:#fff;border-color:#e2e8f0;color:#475569}
+.ed-btn.pri{background:#2563eb;color:#fff}
+.ed-btn.pri:hover{background:#1d4ed8}
+.ed-btn.warn{background:#fff;border-color:#fed7aa;color:#c2410c}
+.ed-btn:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:820px){.ed-grid2{grid-template-columns:1fr}.ed-modal{width:96vw}}
 </style>
 </head>
 <body>
@@ -420,6 +457,22 @@ tr:hover td{background:#fafbfc}
 </div>
 
 <!-- BRAINSTORM PANEL -->
+<div class="ed-overlay" id="ed-overlay" onclick="closeEditor()"></div>
+<div class="ed-modal" id="ed-modal">
+  <div class="ed-head">
+    <div><h3 id="ed-title">Edit</h3><div class="ed-sub" id="ed-sub"></div></div>
+    <button class="ed-close" onclick="closeEditor()" aria-label="Close">&times;</button>
+  </div>
+  <div class="ed-body" id="ed-body"></div>
+  <div class="ed-foot">
+    <div class="ed-note" id="ed-note"></div>
+    <div class="ed-btns">
+      <button class="ed-btn warn" id="ed-reset" onclick="editorResetToOriginal()">Reset to original</button>
+      <button class="ed-btn sec" onclick="closeEditor()">Cancel</button>
+      <button class="ed-btn pri" id="ed-save" onclick="editorSave()">Save</button>
+    </div>
+  </div>
+</div>
 <div class="bs-overlay" id="bs-overlay" onclick="closeBrainstorm()"></div>
 <div class="bs-panel" id="bs-panel">
   <div class="bs-header">
@@ -14948,7 +15001,7 @@ function setActiveFilter(btn,id){
   btn.classList.add('active');
 }
 function buildGapDeptFilters(){
-  const depts=[...new Set(GAPS.map(g=>SOPS.find(s=>s.id===g.sop)?.dept).filter(Boolean))];
+  const depts=[...new Set(allEffectiveGaps().map(g=>SOPS.find(s=>s.id===g.sop)?.dept).filter(Boolean))];
   document.getElementById('gap-dept-filters').innerHTML=
     `<button class="filter-btn active" onclick="gapsDeptFilter='all';setActiveFilter(this,'gap-dept-filters');buildGaps()">All</button>`+
     depts.map(d=>`<button class="filter-btn" onclick="gapsDeptFilter='${d}';setActiveFilter(this,'gap-dept-filters');buildGaps()">${d}</button>`).join('');
@@ -14956,7 +15009,8 @@ function buildGapDeptFilters(){
 function buildGaps(){
   const el=document.getElementById('gap-content');
   const q=(gapsSearch||'').toLowerCase();
-  const filtered=GAPS.filter(g=>{
+  const ALLG=allEffectiveGaps();
+  const filtered=ALLG.filter(g=>{
     const matchCat=gapsCatFilter==='all'||g.cat===gapsCatFilter;
     const dept=SOPS.find(s=>s.id===g.sop)?.dept||'';
     const matchDept=gapsDeptFilter==='all'||dept===gapsDeptFilter;
@@ -14964,7 +15018,7 @@ function buildGaps(){
     return matchCat&&matchDept&&matchSearch;
   });
   const res=document.getElementById('gap-results');
-  if(res)res.textContent=filtered.length===GAPS.length?'':`Showing ${filtered.length} of ${GAPS.length} gaps`;
+  if(res)res.textContent=filtered.length===ALLG.length?'':`Showing ${filtered.length} of ${ALLG.length} gaps`;
   if(!filtered.length){
     el.innerHTML=`<div class="card" style="text-align:center;padding:40px;color:#94a3b8;font-size:14px">No gaps match the current filters.</div>`;
     return;
@@ -15182,6 +15236,182 @@ function rmCollapseAll(uid){
   });
 }
 
+
+// ─── GAP / AGENT MANUAL EDITOR ───────────────────────────────────────────────
+let _edState={kind:null,sopId:null,rows:[]};
+const _esc=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function openGapEditor(sopId){
+  _edState={kind:'gaps',sopId,rows:effectiveGaps(sopId).map(g=>({cat:g.cat,title:g.title,desc:g.desc}))};
+  _edOpen('Edit Gap Analysis','Gaps recorded against this SOP. They also appear in the global Gap Analysis view.');
+}
+function openAgentEditor(sopId){
+  _edState={kind:'agents',sopId,rows:effectiveAgents(sopId).map(a=>({id:a.id,name:a.name,objective:a.objective}))};
+  _edOpen('Edit AI Agents','Attach or detach agents and refine the name and objective shown on this SOP. Full agent internals stay in the Agent Library.');
+}
+function _edOpen(title,sub){
+  const sop=SOPS.find(s=>s.id===_edState.sopId);
+  document.getElementById('ed-title').textContent=title;
+  document.getElementById('ed-sub').textContent=`${sop.id} — ${sop.title} · ${sub}`;
+  document.getElementById('ed-note').textContent=_isAdmin
+    ? 'Saving as admin applies the change immediately for everyone.'
+    : 'Your change will be sent to the admin for review before it goes live.';
+  document.getElementById('ed-save').textContent=_isAdmin?'Save changes':'Submit for review';
+  document.getElementById('ed-modal').classList.add('open');
+  document.getElementById('ed-overlay').classList.add('open');
+  _edRender();
+}
+function closeEditor(){
+  document.getElementById('ed-modal').classList.remove('open');
+  document.getElementById('ed-overlay').classList.remove('open');
+}
+function _edRender(){
+  const b=document.getElementById('ed-body');
+  const k=_edState.kind;
+  if(!_edState.rows.length){
+    b.innerHTML=`<p style="font-size:13px;color:#94a3b8;font-style:italic;margin:4px 0 12px">Nothing here yet — add the first ${k==='gaps'?'gap':'agent'}.</p>`;
+  } else if(k==='gaps'){
+    b.innerHTML=_edState.rows.map((g,i)=>`
+      <div class="ed-row">
+        <div class="ed-row-top"><div class="ed-idx">${i+1}</div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600">GAP ${i+1}</div>
+          <button class="ed-del" onclick="edDelete(${i})">Remove</button></div>
+        <div class="ed-grid2">
+          <div><label>Category</label>
+            <select onchange="edSet(${i},'cat',this.value)">
+              ${GAP_CATS.map(c=>`<option value="${_esc(c)}"${c===g.cat?' selected':''}>${_esc(c)}</option>`).join('')}
+            </select></div>
+          <div><label>Gap title</label>
+            <input type="text" value="${_esc(g.title)}" oninput="edSet(${i},'title',this.value)" placeholder="Short name for the gap"></div>
+        </div>
+        <label>Description</label>
+        <textarea oninput="edSet(${i},'desc',this.value)" placeholder="What is missing and why it matters">${_esc(g.desc)}</textarea>
+      </div>`).join('');
+  } else {
+    b.innerHTML=_edState.rows.map((a,i)=>{
+      const meta=agentMeta(a.id);
+      return `<div class="ed-row">
+        <div class="ed-row-top"><div class="ed-idx">${i+1}</div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600">${meta?'AGENT '+a.id:'NEW AGENT'}</div>
+          <button class="ed-del" onclick="edDelete(${i})">Detach</button></div>
+        <label>Name</label>
+        <input type="text" value="${_esc(a.name)}" oninput="edSet(${i},'name',this.value)" placeholder="Agent name">
+        <label style="margin-top:8px">Objective</label>
+        <textarea oninput="edSet(${i},'objective',this.value)" placeholder="What this agent automates for this SOP">${_esc(a.objective)}</textarea>
+      </div>`;}).join('');
+  }
+  b.insertAdjacentHTML('beforeend', k==='gaps'
+    ? `<button class="ed-add" onclick="edAdd()">+ Add gap</button>`
+    : `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+         <div><label>Attach an existing agent</label>
+           <select id="ed-agent-pick">
+             <option value="">Choose an agent…</option>
+             ${AGENTS.filter(a=>!_edState.rows.some(r=>r.id===a.id)).map(a=>`<option value="${a.id}">Agent ${a.id} — ${_esc(a.name)} (${_esc(a.dept)})</option>`).join('')}
+           </select></div>
+         <button class="ed-add" style="width:auto;padding:9px 14px" onclick="edAttachAgent()">Attach</button>
+       </div>
+       <button class="ed-add" style="margin-top:8px" onclick="edAdd()">+ Propose a new agent</button>`);
+}
+function edSet(i,key,val){_edState.rows[i][key]=val;}
+function edDelete(i){_edState.rows.splice(i,1);_edRender();}
+function edAdd(){
+  _edState.rows.push(_edState.kind==='gaps'
+    ? {cat:GAP_CATS[0],title:'',desc:''}
+    : {id:0,name:'',objective:''});
+  _edRender();
+}
+function edAttachAgent(){
+  const sel=document.getElementById('ed-agent-pick');
+  const id=parseInt(sel.value,10);
+  if(!id)return;
+  const a=agentMeta(id);
+  if(a)_edState.rows.push({id:a.id,name:a.name,objective:a.objective});
+  _edRender();
+}
+function editorResetToOriginal(){
+  const k=_edState.kind,id=_edState.sopId;
+  _edState.rows=(k==='gaps'?baseGaps(id):baseAgents(id)).map(x=>({...x}));
+  _edRender();
+}
+async function editorSave(){
+  const {kind,sopId,rows}=_edState;
+  const clean=rows.map(r=>kind==='gaps'
+      ? {cat:(r.cat||'').trim(),title:(r.title||'').trim(),desc:(r.desc||'').trim()}
+      : {id:r.id||0,name:(r.name||'').trim(),objective:(r.objective||'').trim()})
+    .filter(r=>kind==='gaps'?(r.title||r.desc):(r.name||r.objective));
+  const bad=clean.some(r=>kind==='gaps'?(!r.title||!r.desc):(!r.name||!r.objective));
+  if(bad){alert(kind==='gaps'?'Every gap needs a title and a description.':'Every agent needs a name and an objective.');return;}
+  const btn=document.getElementById('ed-save');btn.disabled=true;btn.textContent='Saving…';
+  const oldValue=kind==='gaps'?effectiveGaps(sopId):effectiveAgents(sopId);
+  const payload={field:kind,oldValue,newValue:clean,suggestion:`Manual edit of ${kind==='gaps'?'Gap Analysis':'AI Agents'} for ${sopId}`};
+  try{
+    const url=_isAdmin?`/api/sops/${encodeURIComponent(sopId)}/accept`:`/api/sops/${encodeURIComponent(sopId)}/submit`;
+    const headers={'Content-Type':'application/json'};
+    if(_isAdmin)headers['x-admin-token']=_adminToken||localStorage.getItem('rbdpl_admin_token')||'';
+    const r=await fetch(url,{method:'POST',headers,body:JSON.stringify(payload)});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error||'Save failed');}
+    if(_isAdmin){
+      if(!EDIT_OVERRIDES[sopId])EDIT_OVERRIDES[sopId]={};
+      EDIT_OVERRIDES[sopId][kind]=clean;
+    }
+    closeEditor();
+    if(_isAdmin){
+      buildGaps();buildAgentGrid();
+      await showSOPDetail(sopId);
+    }else{
+      alert('Thanks — your suggestion has been sent to the admin for review.');
+    }
+  }catch(err){
+    alert('Could not save: '+err.message);
+  }finally{
+    btn.disabled=false;btn.textContent=_isAdmin?'Save changes':'Submit for review';
+  }
+}
+
+// ─── GAP / AGENT OVERRIDES ───────────────────────────────────────────────────
+const GAP_CATS=["Process Logic","Control / Compliance","Data / Integration","Coordination"];
+let EDIT_OVERRIDES={};
+async function loadAllOverrides(){
+  try{const r=await fetch('/api/edits/all');if(r.ok)EDIT_OVERRIDES=await r.json();}catch(_){}
+}
+function fieldValue(sop,field){
+  if(field==='gaps')return effectiveGaps(sop.id);
+  if(field==='agents')return effectiveAgents(sop.id);
+  return sop[field];
+}
+function fmtFieldVal(v){
+  if(!Array.isArray(v))return v==null?'':String(v);
+  return v.map((x,i)=>{
+    if(x&&typeof x==='object'){
+      const head=x.title||x.name||'';
+      const body=x.desc||x.objective||'';
+      const pre=x.cat?`[${x.cat}] `:'';
+      return `${i+1}. ${pre}${head}${body?': '+body:''}`;
+    }
+    return `${i+1}. ${x}`;
+  }).join('\n');
+}
+function allEffectiveGaps(){
+  const out=[];
+  SOPS.forEach(s=>effectiveGaps(s.id).forEach(g=>out.push({sop:s.id,cat:g.cat,title:g.title,desc:g.desc})));
+  return out;
+}
+function baseGaps(sopId){return GAPS.filter(g=>g.sop===sopId).map(g=>({cat:g.cat,title:g.title,desc:g.desc}));}
+function baseAgents(sopId){
+  return AGENTS.filter(a=>a.sop.split('/').map(x=>x.trim()).includes(sopId))
+               .map(a=>({id:a.id,name:a.name,objective:a.objective}));
+}
+function effectiveGaps(sopId){
+  const o=EDIT_OVERRIDES[sopId]&&EDIT_OVERRIDES[sopId].gaps;
+  return Array.isArray(o)?o:baseGaps(sopId);
+}
+function effectiveAgents(sopId){
+  const o=EDIT_OVERRIDES[sopId]&&EDIT_OVERRIDES[sopId].agents;
+  return Array.isArray(o)?o:baseAgents(sopId);
+}
+// agent meta (dept/phase) still comes from the master AGENTS list where the id matches
+function agentMeta(id){return AGENTS.find(a=>a.id===id)||null;}
+
 async function showSOPDetail(id){
   let sop=SOPS.find(s=>s.id===id);
   if(!sop)return;
@@ -15192,7 +15422,12 @@ async function showSOPDetail(id){
       const edits=await r.json();
       if(edits.length){
         sop={...sop};
-        edits.forEach(e=>{sop[e.field]=JSON.parse(e.new_value);});
+        if(!EDIT_OVERRIDES[id])EDIT_OVERRIDES[id]={};
+        edits.forEach(e=>{
+          const v=JSON.parse(e.new_value);
+          sop[e.field]=v;
+          EDIT_OVERRIDES[id][e.field]=v;
+        });
       }
     }
   }catch(_){}
@@ -15328,8 +15563,12 @@ async function showSOPDetail(id){
 
     <!-- 12. GAP ANALYSIS -->
     ${(()=>{
-      const sopGaps=GAPS.filter(g=>g.sop===sop.id);
-      if(!sopGaps.length)return`<div class="section-box" style="border-left:4px solid #e2e8f0"><h4>Gap Analysis</h4><p style="font-size:13px;color:#94a3b8;font-style:italic">No gaps identified for this SOP yet.</p></div>`;
+      const sopGaps=effectiveGaps(sop.id);
+      const edited=!!(EDIT_OVERRIDES[sop.id]&&EDIT_OVERRIDES[sop.id].gaps);
+      const btn=`<button class="sec-edit-btn" onclick="openGapEditor('${sop.id}')">${_isAdmin?'Edit':'Suggest edit'}</button>`;
+      if(!sopGaps.length)return`<div class="section-box" style="border-left:4px solid #e2e8f0">
+        <div class="sec-head"><h4 style="margin:0">Gap Analysis</h4>${btn}</div>
+        <p style="font-size:13px;color:#94a3b8;font-style:italic">No gaps identified for this SOP yet.</p></div>`;
       const bycat={};
       sopGaps.forEach(g=>{if(!bycat[g.cat])bycat[g.cat]=[];bycat[g.cat].push(g);});
       const rows=sopGaps.map(g=>`<tr>
@@ -15341,39 +15580,47 @@ async function showSOPDetail(id){
       </tr>`).join('');
       const summary=Object.entries(bycat).map(([cat,gs])=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:${CAT_COLOR[cat]||'#64748b'};background:${CAT_COLOR[cat]||'#64748b'}12;padding:3px 8px;border-radius:10px">${gs.length} ${cat}</span>`).join('');
       return`<div class="section-box" style="border-left:4px solid #ef4444;padding-bottom:4px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-          <h4 style="margin:0">Gap Analysis <span style="font-size:11px;font-weight:500;color:#94a3b8;text-transform:none;letter-spacing:0">(${sopGaps.length} gap${sopGaps.length!==1?'s':''})</span></h4>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">${summary}</div>
+        <div class="sec-head">
+          <h4 style="margin:0">Gap Analysis <span style="font-size:11px;font-weight:500;color:#94a3b8;text-transform:none;letter-spacing:0">(${sopGaps.length} gap${sopGaps.length!==1?'s':''})</span>${edited?'<span class="sec-edited">edited</span>':''}</h4>
+          ${btn}
         </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">${summary}</div>
         <table style="margin:0;border-radius:6px;overflow:hidden">
           <thead><tr><th style="width:150px">Category</th><th style="width:220px">Gap</th><th>Description</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
         <div style="margin-top:10px;text-align:right">
-          <span onclick="showView('gaps')" style="font-size:11px;color:#3b82f6;cursor:pointer;font-weight:500">View all gaps across all SOPs →</span>
+          <span onclick="showView('gaps')" style="font-size:11px;color:#3b82f6;cursor:pointer;font-weight:500">View all gaps across all SOPs &rarr;</span>
         </div>
       </div>`;
     })()}
 
     <!-- 13. RELEVANT AI AGENTS -->
     ${(()=>{
-      const sopAgents=AGENTS.filter(a=>a.sop.split('/').map(s=>s.trim()).includes(sop.id));
-      if(!sopAgents.length)return`<div class="section-box" style="border-left:4px solid #e2e8f0"><h4>AI Agents</h4><p style="font-size:13px;color:#94a3b8;font-style:italic">No agents designed for this SOP yet.</p></div>`;
-      const cards=sopAgents.map(a=>`
-        <div onclick="showAgent(${a.id})" style="cursor:pointer;padding:12px 14px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;transition:box-shadow 0.15s" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+      const sopAgents=effectiveAgents(sop.id);
+      const edited=!!(EDIT_OVERRIDES[sop.id]&&EDIT_OVERRIDES[sop.id].agents);
+      const btn=`<button class="sec-edit-btn" onclick="openAgentEditor('${sop.id}')">${_isAdmin?'Edit':'Suggest edit'}</button>`;
+      if(!sopAgents.length)return`<div class="section-box" style="border-left:4px solid #e2e8f0">
+        <div class="sec-head"><h4 style="margin:0">AI Agents</h4>${btn}</div>
+        <p style="font-size:13px;color:#94a3b8;font-style:italic">No agents designed for this SOP yet.</p></div>`;
+      const cards=sopAgents.map(a=>{
+        const meta=agentMeta(a.id);
+        const clickable=meta?`onclick="showAgent(${a.id})" style="cursor:pointer;`:`style="`;
+        return `<div ${clickable}padding:12px 14px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;transition:box-shadow 0.15s" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
-            <span style="font-size:13px;font-weight:700;color:#1e293b">Agent ${a.id} — ${a.name}</span>
-            ${deptTag(a.dept)}${phaseTag(a.phase)}
+            <span style="font-size:13px;font-weight:700;color:#1e293b">${meta?'Agent '+a.id+' — ':''}${a.name}</span>
+            ${meta?deptTag(meta.dept)+phaseTag(meta.phase):'<span class="badge" style="background:#f1f5f9;color:#64748b">proposed</span>'}
           </div>
           <p style="font-size:12px;color:#64748b;margin:0;line-height:1.5">${a.objective}</p>
-        </div>`).join('');
+        </div>`;}).join('');
       return`<div class="section-box" style="border-left:4px solid #7c3aed">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-          <h4 style="margin:0">AI Agents <span style="font-size:11px;font-weight:500;color:#94a3b8;text-transform:none;letter-spacing:0">(${sopAgents.length} agent${sopAgents.length!==1?'s':''})</span></h4>
+        <div class="sec-head">
+          <h4 style="margin:0">AI Agents <span style="font-size:11px;font-weight:500;color:#94a3b8;text-transform:none;letter-spacing:0">(${sopAgents.length} agent${sopAgents.length!==1?'s':''})</span>${edited?'<span class="sec-edited">edited</span>':''}</h4>
+          ${btn}
         </div>
         <div style="display:flex;flex-direction:column;gap:10px">${cards}</div>
         <div style="margin-top:10px;text-align:right">
-          <span onclick="showView('agents')" style="font-size:11px;color:#3b82f6;cursor:pointer;font-weight:500">View all agents →</span>
+          <span onclick="showView('agents')" style="font-size:11px;color:#3b82f6;cursor:pointer;font-weight:500">View all agents &rarr;</span>
         </div>
       </div>`;
     })()}
@@ -15450,7 +15697,7 @@ async function loadAdminReview() {
       el.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:#94a3b8;font-size:14px">No pending submissions — all caught up! ✓</div>';
       return;
     }
-    const FIELD_LABELS = { objective:'Objective', processDescription:'Process Description', kpis:'KPIs', opportunities:'Opportunities' };
+    const FIELD_LABELS = { objective:'Objective', processDescription:'Process Description', kpis:'KPIs', opportunities:'Opportunities', gaps:'Gap Analysis', agents:'AI Agents' };
     el.innerHTML = rows.map(row => {
       const sop = SOPS.find(s => s.id === row.sop_id);
       const oldVal = JSON.parse(row.old_value);
@@ -15493,6 +15740,8 @@ async function adminApprove(editId, btn) {
     btn.closest('.card').style.opacity = '0.4';
     btn.textContent = '✓ Approved';
     refreshPendingCount();
+    await loadAllOverrides();
+    buildGapDeptFilters(); buildGaps(); buildAgentGrid();
   } catch(e) { btn.disabled = false; btn.textContent = '✓ Approve & Apply'; alert('Failed'); }
 }
 
@@ -15518,7 +15767,7 @@ async function refreshPendingCount() {
 async function submitField(field) {
   const sop = window._currentSop;
   const newValue = _bsPendingChanges[field];
-  const oldValue = sop[field];
+  const oldValue = fieldValue(sop, field);
   try {
     const r = await fetch(`/api/sops/${encodeURIComponent(sop.id)}/submit`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -15534,7 +15783,7 @@ const _origMarkFieldDone = markFieldDone;
 markFieldDone = function(field, state) {
   if (state === 'submitted') {
     const cards = document.querySelectorAll('.bs-diff-card');
-    const labels = { objective:'Objective', processDescription:'Process Description', kpis:'KPIs', opportunities:'Opportunities' };
+    const labels = { objective:'Objective', processDescription:'Process Description', kpis:'KPIs', opportunities:'Opportunities', gaps:'Gap Analysis', agents:'AI Agents' };
     cards.forEach(card => {
       const lbl = card.querySelector('.bs-diff-label');
       if (lbl && lbl.textContent === (labels[field]||field)) {
@@ -15561,6 +15810,8 @@ buildGapDeptFilters();
 buildGaps();
 buildAgentGrid();
 initAdmin();
+// pull accepted gap/agent overrides, then refresh the views that use them
+loadAllOverrides().then(()=>{buildGapDeptFilters();buildGaps();});
 
 // ─── BRAINSTORM PANEL ────────────────────────────────────────────────────────
 let _bsPendingChanges={}, _bsSuggestionText='';
@@ -15602,7 +15853,7 @@ async function generateSuggestion(){
     const r=await fetch(`/api/sops/${encodeURIComponent(sop.id)}/suggest`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({suggestion, sopData:sop})
+      body:JSON.stringify({suggestion, sopData:{...sop,gaps:effectiveGaps(sop.id),agents:effectiveAgents(sop.id)}})
     });
     const data=await r.json();
     if(!r.ok)throw new Error(data.error||'Server error');
@@ -15619,16 +15870,16 @@ function renderProposal(sop, explanation, changes){
   document.getElementById('bs-loading').style.display='none';
   document.getElementById('bs-explanation').textContent=explanation||'';
 
-  const FIELD_LABELS={objective:'Objective',processDescription:'Process Description',kpis:'KPIs',opportunities:'Opportunities'};
+  const FIELD_LABELS={objective:'Objective',processDescription:'Process Description',kpis:'KPIs',opportunities:'Opportunities',gaps:'Gap Analysis',agents:'AI Agents'};
   const fields=Object.keys(changes||{});
   if(!fields.length){
     document.getElementById('bs-diff-fields').innerHTML=`<p style="font-size:13px;color:#94a3b8;text-align:center;padding:20px 0">No changes were proposed — try rephrasing your suggestion.</p>`;
   } else {
     document.getElementById('bs-diff-fields').innerHTML=fields.map(field=>{
-      const oldVal=sop[field];
+      const oldVal=fieldValue(sop,field);
       const newVal=changes[field];
-      const oldStr=Array.isArray(oldVal)?oldVal.map((v,i)=>`${i+1}. ${typeof v==='object'?`${v.title}: ${v.desc}`:v}`).join('\n'):oldVal||'';
-      const newStr=Array.isArray(newVal)?newVal.map((v,i)=>`${i+1}. ${typeof v==='object'?`${v.title}: ${v.desc}`:v}`).join('\n'):newVal||'';
+      const oldStr=fmtFieldVal(oldVal);
+      const newStr=fmtFieldVal(newVal);
       return `<div class="bs-diff-card">
         <div class="bs-diff-label">${FIELD_LABELS[field]||field}</div>
         <div class="bs-diff-old"><strong style="font-size:10px;color:#b91c1c;display:block;margin-bottom:4px">CURRENT</strong>${oldStr}</div>
@@ -15648,7 +15899,7 @@ function renderProposal(sop, explanation, changes){
 async function acceptField(field){
   const sop=window._currentSop;
   const newValue=_bsPendingChanges[field];
-  const oldValue=sop[field];
+  const oldValue=fieldValue(sop,field);
   try{
     const r=await fetch(`/api/sops/${encodeURIComponent(sop.id)}/accept`,{
       method:'POST',
@@ -15658,6 +15909,11 @@ async function acceptField(field){
     if(!r.ok)throw new Error('Save failed');
     // Apply change live to the cached SOP and re-render the detail page
     window._currentSop={...sop,[field]:newValue};
+    if(field==='gaps'||field==='agents'){
+      if(!EDIT_OVERRIDES[sop.id])EDIT_OVERRIDES[sop.id]={};
+      EDIT_OVERRIDES[sop.id][field]=newValue;
+      buildGaps();buildAgentGrid();
+    }
     // Visually mark the card as accepted
     markFieldDone(field,'accepted');
     // Refresh the SOP detail silently
@@ -15675,7 +15931,7 @@ function rejectField(field){
 function markFieldDone(field, state){
   // Find the diff card for this field and replace its actions with a status badge
   const cards=document.querySelectorAll('.bs-diff-card');
-  const labels={objective:'Objective',processDescription:'Process Description',kpis:'KPIs',opportunities:'Opportunities'};
+  const labels={objective:'Objective',processDescription:'Process Description',kpis:'KPIs',opportunities:'Opportunities',gaps:'Gap Analysis',agents:'AI Agents'};
   cards.forEach(card=>{
     const lbl=card.querySelector('.bs-diff-label');
     if(lbl&&lbl.textContent===(labels[field]||field)){
@@ -15700,7 +15956,7 @@ async function loadHistory(){
       document.getElementById('bs-history-list').innerHTML=`<div style="font-size:12px;color:#94a3b8;font-style:italic">No edit history yet.</div>`;
       return;
     }
-    const FIELD_LABELS={objective:'Objective',processDescription:'Process Description',kpis:'KPIs',opportunities:'Opportunities'};
+    const FIELD_LABELS={objective:'Objective',processDescription:'Process Description',kpis:'KPIs',opportunities:'Opportunities',gaps:'Gap Analysis',agents:'AI Agents'};
     const STATUS={0:'Pending',1:'Accepted',2:'Superseded'};
     const STATUS_COLOR={0:'#f59e0b',1:'#059669',2:'#94a3b8'};
     document.getElementById('bs-history-list').innerHTML=rows.map(row=>{

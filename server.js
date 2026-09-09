@@ -53,6 +53,22 @@ app.get('/api/sops/:id/edits', (req, res) => {
   res.json(Object.values(byField));
 });
 
+// ── GET every accepted edit across all SOPs (for gap/agent overrides) ────────
+app.get('/api/edits/all', (req, res) => {
+  const rows = db.prepare(`
+    SELECT sop_id, field, new_value FROM sop_edits
+    WHERE accepted = 1 ORDER BY id DESC
+  `).all();
+  const out = {};
+  rows.forEach(r => {
+    if (!out[r.sop_id]) out[r.sop_id] = {};
+    if (out[r.sop_id][r.field] === undefined) {
+      try { out[r.sop_id][r.field] = JSON.parse(r.new_value); } catch (_) {}
+    }
+  });
+  res.json(out);
+});
+
 // ── GET full edit history for a SOP ──────────────────────────────────────────
 app.get('/api/sops/:id/history', (req, res) => {
   const rows = db.prepare(`
@@ -79,7 +95,9 @@ ${JSON.stringify({
   objective: sopData.objective,
   processDescription: sopData.processDescription,
   kpis: sopData.kpis,
-  opportunities: sopData.opportunities
+  opportunities: sopData.opportunities,
+  gaps: sopData.gaps,
+  agents: sopData.agents
 }, null, 2)}
 
 Team brainstorm suggestion: "${suggestion}"
@@ -91,7 +109,9 @@ Analyse the suggestion and return ONLY the fields that need to change. Use this 
     "objective": "updated string — include ONLY if the objective needs to change",
     "processDescription": ["full updated array — include ONLY if any step description changes"],
     "kpis": ["full updated array — include ONLY if KPIs change"],
-    "opportunities": [{"title": "...", "desc": "..."}]
+    "opportunities": ["full updated array of strings — include ONLY if they change"],
+    "gaps": [{"cat": "Process Logic | Control / Compliance | Data / Integration | Coordination", "title": "short gap name", "desc": "one or two sentences explaining the gap"}],
+    "agents": [{"id": 0, "name": "agent name", "objective": "what the agent automates"}]
   }
 }
 
@@ -99,7 +119,12 @@ Rules:
 - Only include a field in "changes" if it actually needs updating
 - If processDescription changes, return the FULL array
 - Maintain the same professional tone as the original
-- For opportunities, preserve the {title, desc} structure exactly
+- opportunities is an array of plain strings
+- For "gaps", return the FULL updated list for this SOP. "cat" MUST be one of exactly:
+  "Process Logic", "Control / Compliance", "Data / Integration", "Coordination"
+- For "agents", return the FULL updated list attached to this SOP. Keep the existing
+  numeric "id" for agents that already exist; use id 0 only for a brand-new agent idea.
+  Only "name" and "objective" are editable here.
 - Do not invent changes not implied by the suggestion`;
 
   try {
